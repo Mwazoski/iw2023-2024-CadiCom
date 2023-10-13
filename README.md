@@ -1,9 +1,9 @@
 # iw2023-2024-placeholder
 proyecto IW
-##Integrantes
+## Integrantes
 Alejandro Arias Casquero
 Carlos Flethes Montesinos
-Alvaro Orellana
+Alvaro Orellana Serrano
 
-###Link autoevaluación
+### Link autoevaluación
 https://docs.google.com/spreadsheets/d/1YYYh1-6LfwRERAKGqIkD1n4vm1kE5nXo5vskcLg5I8M/edit?usp=sharing
