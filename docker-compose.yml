@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  debian-slim:
+    build: .
+    volumes:
+      - ./cadicom:/home
+    working_dir: /home
+    container_name: debian_slim
+    command: ./mvnw # Keeps the container running
+    ports:
+      - "8080:8080"
+      - "35729:35729"
+    networks:
+      - backend
+
+  db:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: exampledb
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+    networks:
+      - backend
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8090:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: example
+    depends_on:
+      - db
+    networks:
+      - backend
+
+networks:
+  backend:
+
