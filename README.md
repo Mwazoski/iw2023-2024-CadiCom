@@ -21,3 +21,5 @@ Una vez hecho el clone del proyecto, tenemos disponibles los siguientes comandos
 - **make status:** Comprobaremos el estado de los contenedores.
 
 - **make console:** Entraremos con una consola dentro del contenedor.
+
+- **make start:** Iniciaremos el servidor de Spring.
