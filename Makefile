@@ -1,5 +1,6 @@
 build:
 	sudo docker-compose build
+	@make up
 
 up:
 	sudo docker-compose up
