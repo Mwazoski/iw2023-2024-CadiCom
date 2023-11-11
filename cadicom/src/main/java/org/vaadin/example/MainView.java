@@ -38,12 +38,16 @@ public class MainView extends VerticalLayout {
     public MainView(@Autowired GreetService service) {
 
         // Use TextField for standard text input
-        TextField textField = new TextField("Your name");
-        textField.addClassName("bordered");
+        TextField tName = new TextField("Nombre");
+        tName.addClassName("bordered");
+
+        // Apellidos
+        TextField tSurname = new TextField("Apellidos");
+        tSurname.addClassName("bordered");
 
         // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Say hello", e -> {
-            add(new Paragraph(service.greet(textField.getValue())));
+        Button button = new Button("Saludaa!", e -> {
+            add(new Paragraph(service.greet(tName.getValue() + " " + tSurname.getValue())));
         });
 
         // Theme variants give you predefined extra styles for components.
@@ -58,7 +62,7 @@ public class MainView extends VerticalLayout {
         // styles.css.
         addClassName("centered-content");
 
-        add(textField, button);
+        add(tName, tSurname, button);
     }
 
 }
