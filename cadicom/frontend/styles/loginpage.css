@@ -1,0 +1,21 @@
+.background {
+    background-color: #0B181F;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 100%;
+    height: 100%;
+}
+
+.loginForm{
+    max-width: 300px;
+}
+
+.loginBackground {
+    background-color: #0B181F;
+}
+
+.logo {
+    max-width: 200px;
+    max-height: 200px;
+}
