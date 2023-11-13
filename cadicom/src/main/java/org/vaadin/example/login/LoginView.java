@@ -19,12 +19,15 @@ public class LoginView extends VerticalLayout {
     LoginForm loginForm = new LoginForm();
     public LoginView() {
 
-        addClassName("background");
         setSizeFull();
 
         setJustifyContentMode(JustifyContentMode.CENTER);
         setAlignItems(Alignment.CENTER);
+        setDefaultHorizontalComponentAlignment(Alignment.CENTER);
+
         loginForm.setAction("login");
+        loginForm.getStyle().set("margin-top", "auto");
+        loginForm.getStyle().set("margin-bottom", "200px");
 
         add(header , loginForm);
     }

@@ -1,68 +1,79 @@
 package org.vaadin.example;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.html.Footer;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.sidenav.SideNav;
+import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import jakarta.annotation.security.PermitAll;
+
 
 /**
- * A sample Vaadin view class.
- * <p>
- * To implement a Vaadin view just extend any Vaadin component and use @Route
- * annotation to announce it in a URL as a Spring managed bean.
- * <p>
- * A new instance of this class is created for every new user and every browser
- * tab/window.
- * <p>
- * The main view contains a text field for getting the user name and a button
- * that shows a greeting message in a notification.
+ * The main view is a top-level placeholder for other views.
  */
-@Route("/test")
-public class MainView extends VerticalLayout {
+@PermitAll
+@Route("/main")
+public class MainView extends AppLayout {
 
-    /**
-     * Construct a new Vaadin view.
-     * <p>
-     * Build the initial UI state for the user accessing the application.
-     *
-     * @param service
-     *            The message service. Automatically injected Spring managed
-     *            bean.
-     */
-    public MainView(@Autowired GreetService service) {
+    private H2 viewTitle;
 
-        // Use TextField for standard text input
-        TextField tName = new TextField("Nombre");
-        tName.addClassName("bordered");
-
-        // Apellidos
-        TextField tSurname = new TextField("Apellidos");
-        tSurname.addClassName("bordered");
-
-        // Button click listeners can be defined as lambda expressions
-        Button button = new Button("Saludaa!", e -> {
-            add(new Paragraph(service.greet(tName.getValue() + " " + tSurname.getValue())));
-        });
-
-        // Theme variants give you predefined extra styles for components.
-        // Example: Primary button has a more prominent look.
-        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-        // You can specify keyboard shortcuts for buttons.
-        // Example: Pressing enter in this view clicks the Button.
-        button.addClickShortcut(Key.ENTER);
-
-        // Use custom CSS classes to apply styling. This is defined in
-        // styles.css.
-        addClassName("centered-content");
-
-        add(tName, tSurname, button);
+    public MainView() {
+        setPrimarySection(Section.DRAWER);
+        addDrawerContent();
+        addHeaderContent();
     }
 
+    private void addHeaderContent() {
+        DrawerToggle toggle = new DrawerToggle();
+        toggle.setAriaLabel("Menu toggle");
+
+        viewTitle = new H2();
+        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+
+        addToNavbar(true, toggle, viewTitle);
+    }
+
+    private void addDrawerContent() {
+
+        H1 appName = new H1("CadiCom");
+        appName.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.LARGE , LumoUtility.MinHeight.FULL , LumoUtility.MinWidth.FULL);
+        Header header = new Header(appName);
+
+        Scroller scroller = new Scroller(createNavigation());
+
+        addToDrawer(header, scroller, createFooter());
+    }
+
+    private SideNav createNavigation() {
+        SideNav nav = new SideNav();
+
+        nav.addItem(new SideNavItem("Panel", String.valueOf(HelloWorldView.class), VaadinIcon.DASHBOARD.create()));
+        nav.addItem(new SideNavItem("Facturas", String.valueOf(AboutView.class), VaadinIcon.FILE.create()));
+        nav.addItem(new SideNavItem("Usuario", String.valueOf(MyViewView.class), VaadinIcon.USER.create()));
+        nav.addClassNames(LumoUtility.Margin.MEDIUM);
+        return nav;
+    }
+
+    private Footer createFooter() {
+        return new Footer();
+    }
+
+    @Override
+    protected void afterNavigation() {
+        super.afterNavigation();
+        viewTitle.setText(getCurrentPageTitle());
+    }
+
+    private String getCurrentPageTitle() {
+        PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
+        return title == null ? "" : title.value();
+    }
 }
