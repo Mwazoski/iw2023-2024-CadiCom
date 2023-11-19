@@ -1,11 +1,13 @@
 setup:
 	@make build
 	@make up
-
 build:
 	sudo docker-compose build
 
 up:
+	sudo docker-compose up
+
+upd:
 	sudo docker-compose up -d
 
 down:

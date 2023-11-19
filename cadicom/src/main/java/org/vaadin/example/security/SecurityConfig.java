@@ -22,10 +22,21 @@ public class SecurityConfig extends VaadinWebSecurity {
                 auth.requestMatchers(
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/")).permitAll());
 
+        // Configura la redirección después del login
+        http.formLogin()
+                .successHandler(myAuthenticationSuccessHandler());
+
         super.configure(http); // Call this after setting your rules
         setLoginView(http, LoginView.class);
     }
-
+    // Manejador personalizado para el éxito en el login
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
+        handler.setUseReferer(false);
+        handler.setDefaultTargetUrl("/panel");
+        return handler;
+    }
     @Bean
     UserDetailsManager userDetailsManager(){
         return new InMemoryUserDetailsManager(

@@ -2,11 +2,15 @@ package org.vaadin.example;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Header;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
@@ -19,8 +23,6 @@ import jakarta.annotation.security.PermitAll;
 /**
  * The main view is a top-level placeholder for other views.
  */
-@PermitAll
-@Route("/main")
 public class MainView extends AppLayout {
 
     private H2 viewTitle;
@@ -38,7 +40,21 @@ public class MainView extends AppLayout {
         viewTitle = new H2();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
 
-        addToNavbar(true, toggle, viewTitle);
+        // Crear botón de Cerrar Sesión
+        Button logOutButton = new Button("Cerrar Sesión", new Icon(VaadinIcon.SIGN_OUT));
+        logOutButton.getStyle().set("margin-right", "20px");
+        logOutButton.addClickListener(e -> {
+            // Aquí va la lógica para manejar el cierre de sesión
+            // Por ejemplo, redirigir al usuario a la página de inicio de sesión
+        });
+
+
+        HorizontalLayout headerLayout = new HorizontalLayout(toggle, viewTitle, logOutButton);
+        headerLayout.expand(viewTitle);
+        headerLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        headerLayout.setWidthFull();
+
+        addToNavbar(headerLayout);
     }
 
     private void addDrawerContent() {
@@ -55,9 +71,9 @@ public class MainView extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Panel", String.valueOf(HelloWorldView.class), VaadinIcon.DASHBOARD.create()));
-        nav.addItem(new SideNavItem("Facturas", String.valueOf(AboutView.class), VaadinIcon.FILE.create()));
-        nav.addItem(new SideNavItem("Usuario", String.valueOf(MyViewView.class), VaadinIcon.USER.create()));
+        nav.addItem(new SideNavItem("Panel", "panel", VaadinIcon.DASHBOARD.create()));
+        nav.addItem(new SideNavItem("Facturas", "facturas", VaadinIcon.FILE.create()));
+        nav.addItem(new SideNavItem("Usuario", "usuario", VaadinIcon.USER.create()));
         nav.addClassNames(LumoUtility.Margin.MEDIUM);
         return nav;
     }
