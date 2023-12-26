@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package es.uca.cadicom;
 
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.server.PWA;
@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConf
  *
  */
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-@PWA(name = "Project Base for Vaadin with Spring", shortName = "Project Base")
+@PWA(name = "Cadicom Telecommunications", shortName = "CadiCom")
 @Theme("my-theme")
 public class Application implements AppShellConfigurator {
 

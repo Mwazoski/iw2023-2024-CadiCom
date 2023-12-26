@@ -20,9 +20,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: exampledb
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
+      MYSQL_DATABASE: Cadicom
+      MYSQL_USER: cadicomAdmin
+      MYSQL_PASSWORD: cadicomAdmin
     networks:
       - backend
 
@@ -34,6 +34,8 @@ services:
       - "8090:80"
     environment:
       PMA_HOST: db
+      PMA_USER: cadicomAdmin
+      PMA_PASSWORD: cadicomAdmin
       MYSQL_ROOT_PASSWORD: example
     depends_on:
       - db

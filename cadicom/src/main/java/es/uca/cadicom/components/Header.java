@@ -1,4 +1,4 @@
-package org.vaadin.example.components;
+package es.uca.cadicom.components;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -37,7 +37,6 @@ public class Header extends HorizontalLayout{
         headerRow.setMaxHeight("50px");
         headerRow.setHeight("50px");
 
-
         headerRow.setAlignSelf(FlexComponent.Alignment.CENTER, h2);
         h2.setWidth("max-content");
         headerRowNested.addClassName(LumoUtility.Gap.LARGE);
@@ -51,7 +50,6 @@ public class Header extends HorizontalLayout{
         buttonTertiary.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
 
         add(headerRow);
         headerRow.add(h2);

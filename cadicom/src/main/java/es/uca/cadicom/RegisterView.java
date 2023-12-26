@@ -1,9 +1,8 @@
-package org.vaadin.example;
+package es.uca.cadicom;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -12,7 +11,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.vaadin.example.components.Header;
+import es.uca.cadicom.components.Header;
 
 @AnonymousAllowed
 @CssImport("styles/landingpage.css")

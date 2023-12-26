@@ -1,8 +1,8 @@
-package org.vaadin.example.security;
+package es.uca.cadicom.security;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.vaadin.example.login.LoginView;
+import es.uca.cadicom.login.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

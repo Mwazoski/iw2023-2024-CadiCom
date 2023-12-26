@@ -1,13 +1,12 @@
-package org.vaadin.example.login;
+package es.uca.cadicom.login;
 
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import org.vaadin.example.components.Header;
+import es.uca.cadicom.components.Header;
 
 @AnonymousAllowed
 @CssImport("styles/landingpage.css")

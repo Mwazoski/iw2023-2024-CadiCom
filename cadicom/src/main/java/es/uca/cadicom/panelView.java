@@ -1,4 +1,4 @@
-package org.vaadin.example;
+package es.uca.cadicom;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.html.H1;
@@ -8,11 +8,13 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
 @PermitAll
-@Route("/facturas")
-public class facturasView extends VerticalLayout {
-    public facturasView() {
+@Route("/panel")
+public class panelView extends VerticalLayout {
+    public panelView() {
         MainView main = new MainView();
+        H2 h2 = new H2("Panel de Control");
 
+        add(h2);
         add(main); // Establece el MainView como el contenido principal de esta vista
 
     }
