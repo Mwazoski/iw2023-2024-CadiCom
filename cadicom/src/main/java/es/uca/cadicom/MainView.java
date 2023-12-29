@@ -19,6 +19,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.annotation.security.PermitAll;
 
+import javax.swing.text.View;
+
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -92,4 +94,5 @@ public class MainView extends AppLayout {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
+
 }

@@ -1,6 +1,8 @@
 package es.uca.cadicom.security;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import es.uca.cadicom.login.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
