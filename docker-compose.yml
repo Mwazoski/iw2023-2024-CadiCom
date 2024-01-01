@@ -5,6 +5,7 @@ services:
     build: .
     volumes:
       - ./cadicom:/home
+      - ./maven-repo:/root/.m2
     container_name: debian_slim
     command: tail -f /dev/null # Keeps the container running
     ports:
@@ -45,3 +46,5 @@ services:
 networks:
   backend:
 
+volumes:
+  maven-repo:

@@ -1,26 +1,29 @@
 setup:
 	@make build
-	@make up
+	@make upd
 build:
-	sudo docker-compose build
+	docker-compose build
 
 up:
-	sudo docker-compose up
+	docker-compose up
 
 upd:
-	sudo docker-compose up -d
+	docker-compose up -d
 
 down:
-	sudo docker-compose down
+	docker-compose down
 
 status:
-	sudo docker-compose ps
+	docker-compose ps
 
 start:
-	sudo docker exec -i debian_slim bash -c "mvn spring-boot:run"
+	docker exec -i debian_slim bash -c "mvn spring-boot:run"
+
+clean:
+	docker exec -i debian_slim bash -c "mvn clean"
 
 stop:
-	sudo docker-compose stop
+	docker-compose stop
 
 console:
-	sudo docker exec -it debian_slim /bin/bash
+	docker exec -it debian_slim /bin/bash

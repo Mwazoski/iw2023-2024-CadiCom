@@ -1,16 +1,18 @@
 package es.uca.cadicom.security;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import es.uca.cadicom.login.LoginView;
+import es.uca.cadicom.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
@@ -18,31 +20,32 @@ public class SecurityConfig extends VaadinWebSecurity {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        HttpSecurity httpSecurity = http.authorizeHttpRequests(auth ->
+        http.authorizeHttpRequests(auth ->
                 auth.requestMatchers(
-                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/")).permitAll());
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll());  // <3>
+        super.configure(http);
+        setLoginView(http, LoginView.class); // <4>
+    }
 
-        // Configura la redirección después del login
-        http.formLogin()
-                .successHandler(myAuthenticationSuccessHandler());
+    @Bean
+    public UserDetailsService users() {
+        UserDetails user = User.builder()
+                .username("user")
+                // password = password with this hash, don't tell anybody :-)
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("USER")
+                .build();
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("USER", "ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin);
+    }
 
-        super.configure(http); // Call this after setting your rules
-        setLoginView(http, LoginView.class);
-    }
-    // Manejador personalizado para el éxito en el login
     @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-        SimpleUrlAuthenticationSuccessHandler handler = new SimpleUrlAuthenticationSuccessHandler();
-        handler.setUseReferer(false);
-        handler.setDefaultTargetUrl("/panel");
-        return handler;
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
-    @Bean
-    UserDetailsManager userDetailsManager(){
-        return new InMemoryUserDetailsManager(
-                User.withUsername("user")
-                        .password("{noop}user")
-                        .roles("USER").build()
-        );
-    }
+
 }

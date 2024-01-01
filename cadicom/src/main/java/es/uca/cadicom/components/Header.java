@@ -1,5 +1,6 @@
 package es.uca.cadicom.components;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
@@ -25,6 +26,7 @@ public class Header extends HorizontalLayout{
 
         H2 h2 = new H2("CADICOM");
         h2.setClassName("h2");
+        h2.addClickListener(event -> UI.getCurrent().navigate("/"));
 
         addClassName(LumoUtility.Padding.LARGE);
         setWidth("100%");
