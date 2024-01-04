@@ -1,5 +1,6 @@
 package es.uca.cadicom.views;
 
+import com.google.protobuf.Api;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
 import com.vaadin.flow.component.UI;
@@ -21,11 +22,18 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.cadicom.components.Header;
+import es.uca.cadicom.entity.LineaCliente;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.UsuarioService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import es.uca.cadicom.service.UsuarioService;
+import es.uca.cadicom.service.ApiService;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @Route("login")
 @PageTitle("Login | Cadicom")
@@ -43,9 +51,13 @@ public class LoginView extends VerticalLayout {
     @NotBlank
     private PasswordField tfPassword = new PasswordField("Contraseña *");
 
-    public LoginView(UsuarioService usuarioService){
+    private final ApiService apiService;
+
+    public LoginView(UsuarioService usuarioService, ApiService apiService){
 
         this.usuarioService = usuarioService;
+        this.apiService = apiService;
+
         setSizeFull();
         VerticalLayout vLayout = new VerticalLayout();
 

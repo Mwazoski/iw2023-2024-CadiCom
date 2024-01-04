@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -92,5 +93,22 @@ public class UsuarioService implements UserDetailsService {
         }
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         return new User(usuario.getEmail(), usuario.getPassword(), Collections.singletonList(authority));
+    }
+
+    public void deleteUser(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            System.err.println("Email is null or empty");
+            return;
+        }
+
+        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(email));
+
+        if (userOpt.isPresent()) {
+            // Delete the user
+            usuarioRepository.delete(userOpt.get());
+            System.out.println("User with email " + email + " has been deleted.");
+        } else {
+            System.err.println("User with email " + email + " not found.");
+        }
     }
 }

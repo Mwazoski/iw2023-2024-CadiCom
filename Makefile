@@ -13,6 +13,9 @@ upd:
 down:
 	docker-compose down
 
+stop:
+	docker-compose stop
+
 status:
 	docker-compose ps
 
