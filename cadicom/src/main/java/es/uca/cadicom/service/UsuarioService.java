@@ -58,6 +58,71 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
+    public Usuario getUser(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            System.err.println("Email is null or empty.");
+            return null;
+        }
+
+        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(email));
+
+        if (userOpt.isPresent()) {
+            return userOpt.get();
+        } else {
+            System.err.println("User with email " + email + " not found.");
+            return null;
+        }
+    }
+
+    public void updateUser(Usuario updatedUser) {
+
+        if (updatedUser == null || updatedUser.getEmail().trim().isEmpty()) {
+            System.err.println("User object is null or email is empty");
+            return;
+        }
+
+        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(updatedUser.getEmail()));
+
+        if (userOpt.isPresent()) {
+            Usuario existingUser = userOpt.get();
+
+            // Update fields of existingUser with values from updatedUser, if they are not null
+            if (updatedUser.getNombre() != null) {
+                existingUser.setNombre(updatedUser.getNombre());
+            }
+            if (updatedUser.getApellidos() != null) {
+                existingUser.setApellidos(updatedUser.getApellidos());
+            }
+            if (updatedUser.getDni() != null) {
+                existingUser.setDni(updatedUser.getDni());
+            }
+            if (updatedUser.getPassword() != null) {
+                existingUser.setPassword(updatedUser.getPassword());
+            }
+            usuarioRepository.save(existingUser);
+            System.out.println("User with email " + updatedUser.getEmail() + " has been updated.");
+        } else {
+            System.err.println("User with email " + updatedUser.getEmail() + " not found.");
+        }
+    }
+
+    public void deleteUser(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            System.err.println("Email is null or empty");
+            return;
+        }
+
+        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(email));
+
+        if (userOpt.isPresent()) {
+            // Delete the user
+            usuarioRepository.delete(userOpt.get());
+            System.out.println("User with email " + email + " has been deleted.");
+        } else {
+            System.err.println("User with email " + email + " not found.");
+        }
+    }
+
     public boolean validateUserCredentials(Usuario usuario) {
         if (usuario == null || usuario.getEmail() == null || usuario.getPassword() == null) {
             System.err.println("Usuario or credentials are null");
@@ -95,20 +160,4 @@ public class UsuarioService implements UserDetailsService {
         return new User(usuario.getEmail(), usuario.getPassword(), Collections.singletonList(authority));
     }
 
-    public void deleteUser(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            System.err.println("Email is null or empty");
-            return;
-        }
-
-        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(email));
-
-        if (userOpt.isPresent()) {
-            // Delete the user
-            usuarioRepository.delete(userOpt.get());
-            System.out.println("User with email " + email + " has been deleted.");
-        } else {
-            System.err.println("User with email " + email + " not found.");
-        }
-    }
 }

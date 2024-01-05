@@ -2,15 +2,17 @@ package es.uca.cadicom.entity;
 
 // Updated import statements using jakarta.persistence
 import jakarta.persistence.*;
+import org.python.antlr.op.In;
+import scala.Int;
 
 @Entity
 public class Factura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private Integer id;
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     private Double importe;
     public Double getImporte() { return importe; }

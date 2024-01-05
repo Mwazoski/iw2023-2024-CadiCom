@@ -9,10 +9,9 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private String id;
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     private String nombre;
     public String getNombre() { return nombre; }

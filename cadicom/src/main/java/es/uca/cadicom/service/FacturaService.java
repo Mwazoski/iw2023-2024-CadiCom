@@ -15,9 +15,7 @@ public class FacturaService {
     }
 
     public Factura createFactura(Factura factura) {
-        if (factura == null) {
-            throw new IllegalArgumentException("Factura cannot be null");
-        }
+        if (factura == null) { throw new IllegalArgumentException("Factura cannot be null"); }
         return facturaRepository.save(factura);
     }
 
@@ -33,7 +31,7 @@ public class FacturaService {
         if (!facturaRepository.existsById(Math.toIntExact(id))) {
             throw new IllegalArgumentException("Factura with id " + id + " does not exist");
         }
-        updatedFactura.setId(id); // Ensure the ID is set correctly
+        updatedFactura.setId(Math.toIntExact(id)); // Ensure the ID is set correctly
         return facturaRepository.save(updatedFactura);
     }
 
@@ -43,8 +41,5 @@ public class FacturaService {
         }
         facturaRepository.deleteById(Math.toIntExact(id));
     }
-
-
-
 
 }

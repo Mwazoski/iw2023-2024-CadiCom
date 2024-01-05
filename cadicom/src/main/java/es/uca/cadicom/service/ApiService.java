@@ -1,22 +1,24 @@
 package es.uca.cadicom.service;
-
 import es.uca.cadicom.entity.LineaCliente;
 import es.uca.cadicom.entity.RegistroDatos;
 import es.uca.cadicom.entity.RegistroLlamadas;
+
 import org.apache.hc.core5.net.URIBuilder;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpClient;
