@@ -12,12 +12,9 @@ upd:
 
 down:
 	docker-compose down
-<<<<<<< HEAD
 
 stop:
 	docker-compose stop
-=======
->>>>>>> frontOffice
 
 status:
 	docker-compose ps
