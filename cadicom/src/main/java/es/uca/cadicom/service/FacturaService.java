@@ -24,7 +24,7 @@ public class FacturaService {
     }
 
     public List<Factura> getAllFacturasByTelefonoId(Long telefonoId) {
-        return facturaRepository.findByTelefonoId(telefonoId);
+        return facturaRepository.findByTelefonoId(Math.toIntExact(telefonoId));
     }
 
     public Factura updateFactura(Long id, Factura updatedFactura) {

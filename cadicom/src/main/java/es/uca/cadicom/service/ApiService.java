@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,14 +185,14 @@ public class ApiService {
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    public List<RegistroDatos> getRegistroDatos(String uuid) throws URISyntaxException, IOException, InterruptedException, ParseException {
+    public List<RegistroDatos> getRegistroDatos(String uuid, String startDate, String endDate) throws URISyntaxException, IOException, InterruptedException, ParseException {
 
         List<RegistroDatos> registroDatos = new ArrayList<>();
 
         URI uri = new URIBuilder("http://omr-simulator.us-east-1.elasticbeanstalk.com/" + uuid + "/datausagerecords")
                 .addParameter("carrier", "cadicom")
-                .addParameter("startDate", "2024-01-04")
-                .addParameter("endDate", "2024-01-04")
+                .addParameter("startDate", startDate)
+                .addParameter("endDate", endDate)
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -215,14 +218,14 @@ public class ApiService {
         return registroDatos;
     }
 
-    public List<RegistroLlamadas> getRegistroLlamadas(String uuid) throws URISyntaxException, IOException, InterruptedException, ParseException {
+    public List<RegistroLlamadas> getRegistroLlamadas(String uuid, String startDate, String endDate) throws URISyntaxException, IOException, InterruptedException, ParseException {
 
         List<RegistroLlamadas> registroLlamadas = new ArrayList<>();
 
         URI uri = new URIBuilder("http://omr-simulator.us-east-1.elasticbeanstalk.com/" + uuid + "/callrecords")
                 .addParameter("carrier", "cadicom")
-                .addParameter("startDate", "2024-01-04")
-                .addParameter("endDate", "2024-01-04")
+                .addParameter("startDate", startDate)
+                .addParameter("endDate", endDate)
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -247,6 +250,18 @@ public class ApiService {
             registroLlamadas.add(registroLlamada);
         }
         return registroLlamadas;
+    }
+
+    public static String getMonthStartDate(int year, int month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return startDate.format(formatter);
+    }
+
+    public static String getMonthEndDate(int year, int month) {
+        LocalDate endDate = YearMonth.of(year, month).atEndOfMonth();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return endDate.format(formatter);
     }
 
 }

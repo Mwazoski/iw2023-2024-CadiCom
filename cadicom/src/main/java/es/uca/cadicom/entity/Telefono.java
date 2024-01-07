@@ -17,6 +17,14 @@ public class Telefono {
     public String getNumero() { return numero; }
     public void setNumero(String numero) { this.numero = numero; }
 
+    private Boolean compartirDatos;
+    public Boolean getCompartirDatos() { return compartirDatos; }
+    public void setCompartirDatos(Boolean compartirDatos) { this.compartirDatos = compartirDatos; }
+
+    private Boolean roaming;
+    public Boolean getRoaming() { return roaming; }
+    public void setRoaming(Boolean roaming) { this.roaming = roaming; }
+
     @ManyToOne
     private Usuario usuario;
     public Usuario getUsuario() { return usuario; }
@@ -31,4 +39,12 @@ public class Telefono {
     private Tarifa tarifa;
     public Tarifa getTarifa() { return tarifa; }
     public void setTarifa(Tarifa tarifa) { this.tarifa = tarifa; }
+
+    public Telefono() {}
+
+    public Telefono(String numero, Usuario usuario, Tarifa tarifa) {
+        this.setNumero(numero);
+        this.setUsuario(usuario);
+        this.setTarifa(tarifa);
+    }
 }

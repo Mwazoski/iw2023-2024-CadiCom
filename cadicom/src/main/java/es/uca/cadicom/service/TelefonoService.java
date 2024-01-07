@@ -1,8 +1,10 @@
 package es.uca.cadicom.service;
 
+import es.uca.cadicom.entity.RegistroLlamadas;
 import es.uca.cadicom.repository.TelefonoRepository;
 import es.uca.cadicom.entity.Telefono;
 
+import java.util.List;
 import java.util.Optional;
 
 public class TelefonoService {
@@ -56,6 +58,13 @@ public class TelefonoService {
             if (updatedTelefono.getTarifa() != null) {
                 existingTelefono.setTarifa(updatedTelefono.getTarifa());
             }
+            if (updatedTelefono.getCompartirDatos() != null) {
+                existingTelefono.setCompartirDatos(updatedTelefono.getCompartirDatos());
+            }
+            if (updatedTelefono.getRoaming() != null) {
+                existingTelefono.setRoaming(updatedTelefono.getRoaming());
+            }
+
             telefonoRepository.save(existingTelefono);
             System.out.println("Telefono with ID " + updatedTelefono.getId() + " has been updated.");
         } else {
@@ -76,6 +85,21 @@ public class TelefonoService {
             System.out.println("Telefono with ID " + id + " has been deleted.");
         } else {
             System.err.println("Telefono with ID " + id + " not found.");
+        }
+    }
+
+    public Telefono getTelefonoNumero(String numero) {
+        if (numero == null || numero.trim().isEmpty()) {
+            System.err.println("Phone number is null or empty.");
+            return null;
+        }
+
+        Telefono telefono = telefonoRepository.findByNumero(numero);
+        if (telefono != null) {
+            return telefono;
+        } else {
+            System.err.println("Telefono with number " + numero + " not found.");
+            return null;
         }
     }
 

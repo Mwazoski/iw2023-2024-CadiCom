@@ -7,12 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
@@ -22,9 +23,9 @@ public class SecurityConfig extends VaadinWebSecurity {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
                 auth.requestMatchers(
-                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/images/*.png")).permitAll());  // <3>
+                        AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/")).permitAll());
         super.configure(http);
-        setLoginView(http, LoginView.class); // <4>
+        setLoginView(http, LoginView.class);
     }
 
     @Bean
@@ -43,9 +44,13 @@ public class SecurityConfig extends VaadinWebSecurity {
         return new InMemoryUserDetailsManager(user, admin);
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    public interface AuthenticationManager {
+//        Authentication authenticate(Authentication authentication) throws AuthenticationException;
+//    }
+//
+//    public interface AuthenticationProvider {
+//        Authentication authenticate(Authentication authentication) throws AuthenticationException;
+//        boolean supports(Class<?> authentication);
+//    }
 
 }

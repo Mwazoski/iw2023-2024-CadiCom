@@ -129,7 +129,6 @@ public class UsuarioService implements UserDetailsService {
             return false;
         }
         try {
-            // Find the user by email
             Usuario existingUser = usuarioRepository.findByEmail(usuario.getEmail());
             if (existingUser == null) {
                 System.err.println("User not found");
@@ -146,7 +145,6 @@ public class UsuarioService implements UserDetailsService {
         CustomAuthenticationSuccessHandler handler = new CustomAuthenticationSuccessHandler();
         handler.setUseReferer(false);
         handler.setDefaultTargetUrl("/panel");
-
         return handler;
     }
 

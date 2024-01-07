@@ -9,9 +9,10 @@ import java.util.Set;
 public class Usuario {
 
     @Id
-    private String id;
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     private String nombre;
     public String getNombre() { return nombre; }
@@ -33,6 +34,10 @@ public class Usuario {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
+    private String role;
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
     @OneToMany(mappedBy = "usuario")
     private Set<Telefono> telefonos;
     public Set<Telefono> getTelefonos() { return telefonos; }
@@ -48,12 +53,13 @@ public class Usuario {
 
     public Usuario() {}
 
-    public Usuario(String nombre, String apellidos, String dni, String email, String password ){
+    public Usuario(String nombre, String apellidos, String dni, String email, String password){
         this.setNombre(nombre);
         this.setApellidos(apellidos);
         this.setDni(dni);
         this.setEmail(email);
         this.setPassword(password);
+        this.setRole("USUARIO");
     }
 
     public Usuario(String email, String password ){
