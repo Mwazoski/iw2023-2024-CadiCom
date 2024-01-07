@@ -1,4 +1,4 @@
-package es.uca.cadicom;
+package es.uca.cadicom.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.Uses;

@@ -18,6 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import es.uca.cadicom.views.MainView;
 
 @PageTitle("Añadir Contrato")
 @Route(value = "anadirContrato", layout = MainView.class)

@@ -1,21 +1,15 @@
-package es.uca.cadicom;
+package es.uca.cadicom.views;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.cadicom.MainView;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.RolesAllowed;
-import java.util.List;
-
 
 @AnonymousAllowed
 @PageTitle("Facturas")

@@ -1,12 +1,9 @@
-package es.uca.cadicom;
+package es.uca.cadicom.views;
 
-import es.uca.cadicom.MainView;
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -42,7 +39,6 @@ public class TarifasyServiciosView extends Composite<VerticalLayout> {
             getContent().add(tabSheet);
             getContent().add(layoutRow);
     }
-
 
     record SampleItem(String value, String label, Boolean disabled) {
     }

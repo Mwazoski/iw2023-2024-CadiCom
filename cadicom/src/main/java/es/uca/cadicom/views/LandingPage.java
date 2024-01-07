@@ -7,6 +7,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import jakarta.annotation.security.PermitAll;
 import es.uca.cadicom.components.Header;
+
 @PermitAll
 @CssImport("./styles/landingpage.css")
 @Route(value = "")

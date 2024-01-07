@@ -1,4 +1,4 @@
-package es.uca.cadicom;
+package es.uca.cadicom.views;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -18,6 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import es.uca.cadicom.views.MainView;
 
 @PageTitle("Añadir Factura")
 @Route(value = "anadirFactura", layout = MainView.class)
