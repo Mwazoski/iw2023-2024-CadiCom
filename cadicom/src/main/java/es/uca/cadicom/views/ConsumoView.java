@@ -89,7 +89,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.setAlignItems(Alignment.CENTER);
         hlLlamada.setJustifyContentMode(JustifyContentMode.START);
         iconLlamada.getElement().setAttribute("icon", "lumo:phone");
-        h2Llamada.setText("Llamdas");
+        h2Llamada.setText("Llamadas");
         h2Llamada.setWidth("max-content");
         barLlamada.setValue(0.5);
 
