@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/iw2023-2024-CadiCom.iml" filepath="$PROJECT_DIR$/.idea/iw2023-2024-CadiCom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cadicom/spring-skeleton.iml" filepath="$PROJECT_DIR$/cadicom/spring-skeleton.iml" />
     </modules>
   </component>
 </project>
