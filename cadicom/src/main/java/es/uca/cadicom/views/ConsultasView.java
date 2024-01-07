@@ -18,12 +18,12 @@ import java.util.List;
 
 
 @AnonymousAllowed
-@PageTitle("Facturas")
-@Route(value = "Facturas", layout = MainView.class)
+@PageTitle("Consultas y Reclamaciones")
+@Route(value = "ConsultasReclamaciones", layout = MainView.class)
 @Uses(Icon.class)
-public class FacturasView extends Composite<VerticalLayout> {
+public class ConsultasView extends Composite<VerticalLayout> {
 
-    public FacturasView() {
+    public ConsultasView() {
         Button buttonPrimary = new Button();
         MultiSelectListBox avatarItems = new MultiSelectListBox();
         getContent().setWidth("100%");
