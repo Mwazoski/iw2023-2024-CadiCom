@@ -38,6 +38,7 @@ public class Usuario {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
+
     @OneToMany(mappedBy = "usuario")
     private Set<Telefono> telefonos;
     public Set<Telefono> getTelefonos() { return telefonos; }

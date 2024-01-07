@@ -10,9 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.Optional;
 
@@ -157,5 +155,4 @@ public class UsuarioService implements UserDetailsService {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         return new User(usuario.getEmail(), usuario.getPassword(), Collections.singletonList(authority));
     }
-
 }

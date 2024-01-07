@@ -29,5 +29,4 @@ public class FacturasView extends Composite<VerticalLayout> {
         getContent().add(buttonPrimary);
         getContent().add(avatarItems);
     }
-
 }

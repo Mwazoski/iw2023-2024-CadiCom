@@ -126,7 +126,6 @@
             <artifactId>httpcore5</artifactId>
             <version>5.2</version>
         </dependency>
-
     </dependencies>
 
     <build>

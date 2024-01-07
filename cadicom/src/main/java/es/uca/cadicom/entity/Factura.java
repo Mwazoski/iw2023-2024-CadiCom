@@ -1,9 +1,6 @@
 package es.uca.cadicom.entity;
 
-// Updated import statements using jakarta.persistence
 import jakarta.persistence.*;
-import org.python.antlr.op.In;
-import scala.Int;
 
 @Entity
 public class Factura {
