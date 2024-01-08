@@ -26,20 +26,23 @@ import java.util.Collection;
 import java.util.List;
 
 @PageTitle("Panel Clientes")
-@Route(value = "clientespanel", layout = MainView.class)
+    @Route(value = "clientespanel", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 public class ClientesView extends Composite<VerticalLayout> {
 
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+    private final Grid<Usuario> usuarioGrid;
+
     public ClientesView(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        Grid<Usuario> usuarioGrid = UsuarioGrid();
-        HorizontalLayout searchLayout = createSearchBar(usuarioGrid);
+        this.usuarioGrid = UsuarioGrid();
+
+        HorizontalLayout searchLayout = createSearchBar();
         getContent().add(searchLayout, usuarioGrid);
     }
 
-    private HorizontalLayout createSearchBar(Grid<Usuario> usuarioGrid) {
+    private HorizontalLayout createSearchBar() {
         TextField emailSearchField = new TextField();
         emailSearchField.setPlaceholder("Search by email");
 
@@ -58,11 +61,11 @@ public class ClientesView extends Composite<VerticalLayout> {
             usuarioGrid.setItems(usuario);
         }
     }
+
     private Grid<Usuario> UsuarioGrid() {
         Grid<Usuario> usuarioGrid = new Grid<>(Usuario.class);
         usuarioGrid.removeAllColumns();
 
-        // Add your custom columns
         usuarioGrid.addColumn(Usuario::getNombre).setHeader("Nombre");
         usuarioGrid.addColumn(Usuario::getApellidos).setHeader("Apellidos");
         usuarioGrid.addColumn(Usuario::getDni).setHeader("Dni");
@@ -78,13 +81,12 @@ public class ClientesView extends Composite<VerticalLayout> {
             return actionsLayout;
         })).setHeader("Acciones");
 
-
         usuarioGrid.addThemeVariants(GridVariant.LUMO_COMPACT,
                 GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_NO_ROW_BORDERS);
 
         usuarioGrid.setWidth("100%");
-        // Fetch and set the data from getAllUsers
+
         List<Usuario> usuarios = usuarioService.getAllUsers();
         usuarioGrid.setItems(usuarios);
 
@@ -97,7 +99,13 @@ public class ClientesView extends Composite<VerticalLayout> {
 
 
     private void removeUsuario(Usuario usuario) {
-        System.out.println("Removing User");
+        usuarioService.deleteUser(usuario.getEmail());
+        updateGrid();
+    }
+
+    private void updateGrid() {
+        List<Usuario> updatedUsers = usuarioService.getAllUsers(); // Assuming a method to fetch all users
+        usuarioGrid.setItems(updatedUsers); // 'grid' is your Vaadin Grid instance
     }
 
 }
