@@ -11,8 +11,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@PageTitle("Inicio")
-@Route(value = "Inicio", layout = MainView.class)
+@PageTitle("Admin Panel")
+@Route(value = "admin", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 public class BackOfficeView extends Composite<VerticalLayout> {
