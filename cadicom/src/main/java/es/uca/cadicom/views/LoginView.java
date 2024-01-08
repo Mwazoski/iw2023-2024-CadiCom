@@ -108,6 +108,7 @@ public class LoginView extends VerticalLayout {
             Usuario usuario = new Usuario(tfEmail.getValue(), tfPassword.getValue());
             boolean userCreated = usuarioService.validateUserCredentials(usuario);
             if (userCreated) {
+                UI.getCurrent().getSession().setAttribute("user", usuario);
                 UI.getCurrent().navigate("/cliente");
             } else {
                 Notification.show("Error: User registration failed.", 3000, Notification.Position.TOP_CENTER);

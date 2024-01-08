@@ -1,5 +1,6 @@
 package es.uca.cadicom.views.frontoffice;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.Composite;
@@ -18,20 +19,16 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
+import es.uca.cadicom.entity.LineaCliente;
+import es.uca.cadicom.entity.Telefono;
+import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.ApiService;
-import es.uca.cadicom.entity.*;
-import es.uca.cadicom.service.TelefonoService;
-import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.time.LocalDate;
-
-import static es.uca.cadicom.service.ApiService.getMonthEndDate;
-import static es.uca.cadicom.service.ApiService.getMonthStartDate;
+import java.util.Set;
 
 @PageTitle("Consumo")
 @Route(value = "consumo", layout = FrontLayout.class)
@@ -67,7 +64,8 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlData.setHeight("min-content");
         hlData.setAlignItems(Alignment.CENTER);
         hlData.setJustifyContentMode(JustifyContentMode.START);
-        barData.setValue(0.5); //value barra barData.setValue();
+        //barData.setValue(0.5); //value barra barData.setValue();
+        setProgressBarValue(barData);
 
         NativeLabel nlblData = new NativeLabel("100 GB");// input datos totales
         nlblData.setId("pblblData");
@@ -128,5 +126,23 @@ public class ConsumoView extends Composite<VerticalLayout> {
         vlGeneral.add(barLlamada);
     }
 
+    private void setProgressBarValue(ProgressBar progressBar) {
+        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
+        Set<Telefono> telefonos = usuario.getTelefonos();
+        Telefono telefono = (Telefono) telefonos.toArray()[0];
+        LineaCliente lineaCliente = null;
+        try {
+            lineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(lineaCliente.getId());
+    }
 
 }
