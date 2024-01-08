@@ -18,9 +18,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
+import es.uca.cadicom.security.SecurityService;
 import es.uca.cadicom.service.ApiService;
 import es.uca.cadicom.entity.*;
+import org.json.simple.parser.ParseException;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 
 import static es.uca.cadicom.service.ApiService.getMonthEndDate;
@@ -32,7 +37,8 @@ import static es.uca.cadicom.service.ApiService.getMonthStartDate;
 //@RolesAllowed("USER")
 @Uses(Icon.class)
 public class ConsumoView extends Composite<VerticalLayout> {
-
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ApiService apiService = new ApiService(restTemplate);
     public ConsumoView() {
         VerticalLayout vlGeneral = new VerticalLayout();
         HorizontalLayout hlData = new HorizontalLayout();
@@ -118,12 +124,13 @@ public class ConsumoView extends Composite<VerticalLayout> {
         vlGeneral.add(barLlamada);
     }
 
-    public Integer getDatosTotal(){
+    public Integer getDatosTotal() throws URISyntaxException, IOException, ParseException, InterruptedException {
         LocalDate fechaActual = LocalDate.now();
 
-        LineaCliente lineaCliente = getLineaClienteTelefono();
+        LineaCliente lineaCliente = apiService.getLineaClienteTelefono("123123123");// cambiar
 
-        getRegistroDatos(lineaCliente.getId(), getMonthStartDate(fechaActual.getYear(), fechaActual.getMonthValue()), getMonthEndDate(fechaActual.getYear(), fechaActual.getMonthValue()+1));
+        apiService.getRegistroDatos(lineaCliente.getId(), getMonthStartDate(fechaActual.getYear(), fechaActual.getMonthValue()), getMonthEndDate(fechaActual.getYear(), fechaActual.getMonthValue()+1));
+        return ;
     }
 
 }

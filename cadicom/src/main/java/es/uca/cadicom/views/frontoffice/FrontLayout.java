@@ -17,18 +17,26 @@ import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.cadicom.security.SecurityService;
 import es.uca.cadicom.security.SecurityUtils;
+import es.uca.cadicom.service.UsuarioService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class FrontLayout extends AppLayout {
 
     private H2 viewTitle;
-    private final transient AuthenticationContext authContext;
+    private final transient Authentication authContext;
+    private User user;
 
-    public FrontLayout(AuthenticationContext authContext) {
-        this.authContext = authContext;
+    public FrontLayout() {
+        this.authContext = SecurityContextHolder.getContext().getAuthentication();
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
         addHeaderContent();
+        System.out.println(authContext);
     }
 
     private void addHeaderContent() {
@@ -89,4 +97,6 @@ public class FrontLayout extends AppLayout {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
+
+
 }
