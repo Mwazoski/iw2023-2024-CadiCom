@@ -2,9 +2,12 @@ package es.uca.cadicom.service;
 
 import es.uca.cadicom.repository.TarifaRepository;
 import es.uca.cadicom.entity.Tarifa;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class TarifaService {
 
     private final TarifaRepository tarifaRepository;

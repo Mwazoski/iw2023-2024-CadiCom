@@ -47,4 +47,8 @@ public class Telefono {
         this.setUsuario(usuario);
         this.setTarifa(tarifa);
     }
+
+    public Telefono(String numero) {
+        this.setNumero(numero);
+    }
 }

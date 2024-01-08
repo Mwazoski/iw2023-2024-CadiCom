@@ -27,5 +27,6 @@ public class Factura {
     private Telefono telefono;
     public Telefono getTelefono() { return telefono; }
     public void setTelefono(Telefono telefono) { this.telefono = telefono; }
+    public void setTelefono(String telefono) { this.telefono.setNumero(telefono); }
 
 }
