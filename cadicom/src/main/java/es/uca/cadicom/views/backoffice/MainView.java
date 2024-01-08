@@ -67,23 +67,11 @@ public class MainView extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        SideNavItem facturaLink = new SideNavItem("Facturas");
-        facturaLink.addItem(new SideNavItem("Añadir", AddFacturasView.class, VaadinIcon.PLUS.create()));
-        facturaLink.addItem(new SideNavItem("Modificar", ModificarFacturaView.class,VaadinIcon.EDIT.create()));
+        SideNavItem inicioLink = new SideNavItem("Inicio", "admin", VaadinIcon.HOME.create());
+        SideNavItem facturaLink = new SideNavItem("Facturas", "facturaspanel", VaadinIcon.INVOICE.create());
+        SideNavItem clientesLink = new SideNavItem("Clientes", "clientespanel", VaadinIcon.USERS.create());
 
-        SideNavItem servicioLink = new SideNavItem("Servicios");
-        servicioLink.addItem(new SideNavItem("Añadir", AddServicioView.class, VaadinIcon.PLUS.create()));
-        servicioLink.addItem(new SideNavItem("Modificar", ModificarServicioView.class,VaadinIcon.EDIT.create()));
-
-        SideNavItem tarifaLink = new SideNavItem("Tarifas");
-        tarifaLink.addItem(new SideNavItem("Añadir", AddTarifaView.class, VaadinIcon.PLUS.create()));
-        tarifaLink.addItem(new SideNavItem("Modificar", ModificarTarifaView.class,VaadinIcon.EDIT.create()));
-
-        SideNavItem contratoLink = new SideNavItem("Contratos");
-        contratoLink.addItem(new SideNavItem("Añadir", AddContratoView.class, VaadinIcon.PLUS.create()));
-        contratoLink.addItem(new SideNavItem("Modificar", ModificarContratoView.class,VaadinIcon.EDIT.create()));
-
-        nav.addItem(facturaLink, servicioLink, tarifaLink, contratoLink);
+        nav.addItem(inicioLink, clientesLink, facturaLink);
         return nav;
     }
 

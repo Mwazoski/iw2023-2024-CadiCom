@@ -18,18 +18,12 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
-import es.uca.cadicom.service.ApiService;
-import es.uca.cadicom.entity.*;
-
-import java.time.LocalDate;
-
-import static es.uca.cadicom.service.ApiService.getMonthEndDate;
-import static es.uca.cadicom.service.ApiService.getMonthStartDate;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Consumo")
 @Route(value = "consumo", layout = FrontLayout.class)
-@AnonymousAllowed
-//@RolesAllowed("USER")
+
+@RolesAllowed("USER")
 @Uses(Icon.class)
 public class ConsumoView extends Composite<VerticalLayout> {
 
@@ -116,14 +110,6 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.add(iconLlamada);
         hlLlamada.add(h2Llamada);
         vlGeneral.add(barLlamada);
-    }
-
-    public Integer getDatosTotal(){
-        LocalDate fechaActual = LocalDate.now();
-
-        LineaCliente lineaCliente = getLineaClienteTelefono();
-
-        getRegistroDatos(lineaCliente.getId(), getMonthStartDate(fechaActual.getYear(), fechaActual.getMonthValue()), getMonthEndDate(fechaActual.getYear(), fechaActual.getMonthValue()+1));
     }
 
 }

@@ -14,9 +14,9 @@ public class FacturaService {
         this.facturaRepository = facturaRepository;
     }
 
-    public Factura createFactura(Factura factura) {
+    public void createFactura(Factura factura) {
         if (factura == null) { throw new IllegalArgumentException("Factura cannot be null"); }
-        return facturaRepository.save(factura);
+        facturaRepository.save(factura);
     }
 
     public Optional<Factura> getFacturaById(Long id) {

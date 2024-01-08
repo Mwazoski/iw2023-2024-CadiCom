@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -70,6 +71,10 @@ public class UsuarioService implements UserDetailsService {
             System.err.println("User with email " + email + " not found.");
             return null;
         }
+    }
+
+    public List<Usuario> getAllUsers() {
+        return usuarioRepository.findAll();
     }
 
     public void updateUser(Usuario updatedUser) {
@@ -154,5 +159,13 @@ public class UsuarioService implements UserDetailsService {
         }
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         return new User(usuario.getEmail(), usuario.getPassword(), Collections.singletonList(authority));
+    }
+
+    public Usuario findUserByEmail(String email) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        return usuario;
     }
 }
