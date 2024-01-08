@@ -24,6 +24,11 @@ public class SecurityConfig extends VaadinWebSecurity {
                 auth.requestMatchers(
                         AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/")).permitAll());
         super.configure(http);
+        // Configura la redirección después del login
+        http.formLogin()
+                .successHandler(myAuthenticationSuccessHandler());
+
+        super.configure(http); // Call this after setting your rules
         setLoginView(http, LoginView.class);
     }
 
