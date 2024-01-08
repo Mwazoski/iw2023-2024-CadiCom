@@ -18,6 +18,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
+import es.uca.cadicom.service.ApiService;
+import es.uca.cadicom.entity.*;
+
+import java.time.LocalDate;
+
+import static es.uca.cadicom.service.ApiService.getMonthEndDate;
+import static es.uca.cadicom.service.ApiService.getMonthStartDate;
+
 @PageTitle("Consumo")
 @Route(value = "consumo", layout = FrontLayout.class)
 @AnonymousAllowed
@@ -63,7 +71,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
         nlblData.setId("pblblData");
         h2Data.setText("Datos móviles");
         h2Data.setWidth("max-content");
-        barData.setValue(0.5); //value barra
+        barData.setValue(0.5); //value barra barData.setValue();
         barData.getElement().setAttribute("aria-labelledby", "pblblData");
 
         Span progressBarLabelValue = new Span("50%"); // input texto derecha
@@ -109,4 +117,13 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.add(h2Llamada);
         vlGeneral.add(barLlamada);
     }
+
+    public Integer getDatosTotal(){
+        LocalDate fechaActual = LocalDate.now();
+
+        LineaCliente lineaCliente = getLineaClienteTelefono();
+
+        getRegistroDatos(lineaCliente.getId(), getMonthStartDate(fechaActual.getYear(), fechaActual.getMonthValue()), getMonthEndDate(fechaActual.getYear(), fechaActual.getMonthValue()+1));
+    }
+
 }
