@@ -1,12 +1,11 @@
 package es.uca.cadicom.views.frontoffice;
 
-import com.vaadin.flow.component.html.NativeLabel;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Hr;
+import com.vaadin.flow.component.html.NativeLabel;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
@@ -15,16 +14,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
-
-import es.uca.cadicom.service.ApiService;
-import es.uca.cadicom.entity.*;
+import es.uca.cadicom.entity.LineaCliente;
 
 import java.time.LocalDate;
-
-import static es.uca.cadicom.service.ApiService.getMonthEndDate;
-import static es.uca.cadicom.service.ApiService.getMonthStartDate;
 
 @PageTitle("Consumo")
 @Route(value = "consumo", layout = FrontLayout.class)
@@ -116,14 +111,6 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.add(iconLlamada);
         hlLlamada.add(h2Llamada);
         vlGeneral.add(barLlamada);
-    }
-
-    public Integer getDatosTotal(){
-        LocalDate fechaActual = LocalDate.now();
-
-        LineaCliente lineaCliente = getLineaClienteTelefono();
-
-        getRegistroDatos(lineaCliente.getId(), getMonthStartDate(fechaActual.getYear(), fechaActual.getMonthValue()), getMonthEndDate(fechaActual.getYear(), fechaActual.getMonthValue()+1));
     }
 
 }

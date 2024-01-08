@@ -9,8 +9,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@PageTitle("Historial")
-@Route(value = "historial", layout = FrontLayout.class)
+@PageTitle("Usuario")
+@Route(value = "usuario", layout = FrontLayout.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 
