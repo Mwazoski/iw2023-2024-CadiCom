@@ -11,8 +11,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
-@PageTitle("Inicio")
-@Route(value = "Inicio", layout = MainView.class)
+@PageTitle("Admin Panel")
+@Route(value = "admin", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 public class BackOfficeView extends Composite<VerticalLayout> {
@@ -25,8 +25,7 @@ public class BackOfficeView extends Composite<VerticalLayout> {
         getContent().getStyle().set("flex-grow", "1");
         h1.setText("Cadicom");
         h1.setWidth("max-content");
-        textLarge.setText(
-                "Bienvenido al portal para empleados de Cadicom, empresa de telecomunicaciones con sede en Cádiz");
+        textLarge.setText("Bienvenido al portal para empleados de Cadicom, empresa de telecomunicaciones con sede en Cádiz");
         textLarge.setWidth("100%");
         textLarge.getStyle().set("font-size", "var(--lumo-font-size-xl)");
         getContent().add(h1);

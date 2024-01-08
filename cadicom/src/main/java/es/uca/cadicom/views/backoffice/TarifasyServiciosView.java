@@ -55,6 +55,7 @@ public class TarifasyServiciosView extends Composite<VerticalLayout> {
         multiSelectListBox.setItemLabelGenerator(item -> ((SampleItem) item).label());
         multiSelectListBox.setItemEnabledProvider(item -> !Boolean.TRUE.equals(((SampleItem) item).disabled()));
     }
+
     private void setTabSheetSampleData(TabSheet tabSheet) {
         VerticalLayout layoutRow = new VerticalLayout();
         MultiSelectListBox textItems = new MultiSelectListBox();

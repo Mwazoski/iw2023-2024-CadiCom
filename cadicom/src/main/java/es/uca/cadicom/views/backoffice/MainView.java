@@ -3,6 +3,7 @@ package es.uca.cadicom.views.backoffice;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -66,10 +67,23 @@ public class MainView extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Panel", "panel", VaadinIcon.DASHBOARD.create()));
-        nav.addItem(new SideNavItem("Facturas", "facturas", VaadinIcon.FILE.create()));
-        nav.addItem(new SideNavItem("Usuario", "usuario", VaadinIcon.USER.create()));
-        nav.addClassNames(LumoUtility.Margin.MEDIUM);
+        SideNavItem facturaLink = new SideNavItem("Facturas");
+        facturaLink.addItem(new SideNavItem("Añadir", AddFacturasView.class, VaadinIcon.PLUS.create()));
+        facturaLink.addItem(new SideNavItem("Modificar", ModificarFacturaView.class,VaadinIcon.EDIT.create()));
+
+        SideNavItem servicioLink = new SideNavItem("Servicios");
+        servicioLink.addItem(new SideNavItem("Añadir", AddServicioView.class, VaadinIcon.PLUS.create()));
+        servicioLink.addItem(new SideNavItem("Modificar", ModificarServicioView.class,VaadinIcon.EDIT.create()));
+
+        SideNavItem tarifaLink = new SideNavItem("Tarifas");
+        tarifaLink.addItem(new SideNavItem("Añadir", AddTarifaView.class, VaadinIcon.PLUS.create()));
+        tarifaLink.addItem(new SideNavItem("Modificar", ModificarTarifaView.class,VaadinIcon.EDIT.create()));
+
+        SideNavItem contratoLink = new SideNavItem("Contratos");
+        contratoLink.addItem(new SideNavItem("Añadir", AddContratoView.class, VaadinIcon.PLUS.create()));
+        contratoLink.addItem(new SideNavItem("Modificar", ModificarContratoView.class,VaadinIcon.EDIT.create()));
+
+        nav.addItem(facturaLink, servicioLink, tarifaLink, contratoLink);
         return nav;
     }
 
