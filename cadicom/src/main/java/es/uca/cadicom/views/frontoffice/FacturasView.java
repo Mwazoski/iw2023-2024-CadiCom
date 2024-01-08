@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.frontoffice;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
@@ -10,17 +10,15 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import jakarta.annotation.security.RolesAllowed;
-import java.util.List;
-
+import es.uca.cadicom.views.backoffice.MainView;
 
 @AnonymousAllowed
-@PageTitle("Consultas y Reclamaciones")
-@Route(value = "ConsultasReclamaciones", layout = MainView.class)
+@PageTitle("Facturas")
+@Route(value = "Facturas", layout = MainView.class)
 @Uses(Icon.class)
-public class ConsultasView extends Composite<VerticalLayout> {
+public class FacturasView extends Composite<VerticalLayout> {
 
-    public ConsultasView() {
+    public FacturasView() {
         Button buttonPrimary = new Button();
         MultiSelectListBox avatarItems = new MultiSelectListBox();
         getContent().setWidth("100%");
@@ -32,5 +30,4 @@ public class ConsultasView extends Composite<VerticalLayout> {
         getContent().add(buttonPrimary);
         getContent().add(avatarItems);
     }
-
 }

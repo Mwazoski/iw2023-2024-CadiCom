@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -13,12 +13,14 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import es.uca.cadicom.views.backoffice.MainView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @AnonymousAllowed
 @PageTitle("Tarifas y Servicios")
-@Route(value = "TarifasServicios", layout = MainView.class)
+@Route(value = "tarifasyservicios", layout = MainView.class)
 //@RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class TarifasyServiciosView extends Composite<VerticalLayout> {

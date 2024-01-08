@@ -1,4 +1,4 @@
-package es.uca.cadicom;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -18,15 +18,14 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import es.uca.cadicom.views.MainView;
 
-@PageTitle("Añadir Contrato")
-@Route(value = "anadirContrato", layout = MainView.class)
+@PageTitle("Añadir Tarifas")
+@Route(value = "anadirTarifa", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
-public class AddContratoView extends Composite<VerticalLayout> {
+public class AddTarifaView extends Composite<VerticalLayout> {
 
-    public AddContratoView() {
+    public AddTarifaView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -51,14 +50,14 @@ public class AddContratoView extends Composite<VerticalLayout> {
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre");
         textField2.setLabel("Apellidos");
-        datePicker.setLabel("Fecha Nacimiento");
+        datePicker.setLabel("Tarifa");
         emailField.setLabel("Email");
-        textField3.setLabel("Puesto de trabajo");
-        textField4.setLabel("Número de telefono");
+        textField3.setLabel("Coste");
+        textField4.setLabel("Linea");
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
-        buttonPrimary.setText("Save");
+        buttonPrimary.setText("Guardar");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonSecondary.setText("Cancelar");

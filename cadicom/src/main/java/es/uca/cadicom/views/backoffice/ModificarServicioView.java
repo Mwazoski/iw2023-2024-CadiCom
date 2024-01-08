@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -19,13 +19,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
-@PageTitle("Añadir Servicio")
-@Route(value = "anadirServicio", layout = MainView.class)
+@PageTitle("Modificar Servicio")
+@Route(value = "modificarservicio", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
-public class AddServicioView extends Composite<VerticalLayout> {
+public class ModificarServicioView extends Composite<VerticalLayout> {
 
-    public AddServicioView() {
+    public ModificarServicioView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();

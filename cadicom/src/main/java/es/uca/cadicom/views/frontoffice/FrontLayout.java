@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.frontoffice;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -19,12 +19,12 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import es.uca.cadicom.security.SecurityUtils;
 
-public class MainView extends AppLayout {
+public class FrontLayout extends AppLayout {
 
     private H2 viewTitle;
     private final transient AuthenticationContext authContext;
 
-    public MainView(AuthenticationContext authContext) {
+    public FrontLayout(AuthenticationContext authContext) {
         this.authContext = authContext;
         setPrimarySection(Section.DRAWER);
         addDrawerContent();
@@ -66,7 +66,9 @@ public class MainView extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Panel", "panel", VaadinIcon.DASHBOARD.create()));
+        nav.addItem(new SideNavItem("Consumo", "consumo", VaadinIcon.DASHBOARD.create()));
+        nav.addItem(new SideNavItem("Historial", "historial", VaadinIcon.DATABASE.create()));
+        //nav.addItem(new SideNavItem("Panel", "panel", VaadinIcon.DASHBOARD.create()));
         nav.addItem(new SideNavItem("Facturas", "facturas", VaadinIcon.FILE.create()));
         nav.addItem(new SideNavItem("Usuario", "usuario", VaadinIcon.USER.create()));
         nav.addClassNames(LumoUtility.Margin.MEDIUM);

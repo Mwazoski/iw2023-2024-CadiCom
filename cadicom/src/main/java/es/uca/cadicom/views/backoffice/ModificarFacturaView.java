@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -8,6 +8,7 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -19,13 +20,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
-@PageTitle("Modificar Contrato")
-@Route(value = "ModificarContrato", layout = MainView.class)
+@PageTitle("Modificar Factura")
+@Route(value = "modificarfactura", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
-public class ModificarContratoView extends Composite<VerticalLayout> {
+public class ModificarFacturaView extends Composite<VerticalLayout> {
 
-    public ModificarContratoView() {
+    public ModificarFacturaView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -50,10 +51,10 @@ public class ModificarContratoView extends Composite<VerticalLayout> {
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre");
         textField2.setLabel("Apellidos");
-        datePicker.setLabel("Fecha Nacimiento");
+        datePicker.setLabel("Dirección");
         emailField.setLabel("Email");
-        textField3.setLabel("Puesto de trabajo");
-        textField4.setLabel("Número de telefono");
+        textField3.setLabel("Cargo");
+        textField4.setLabel("Numero de Telefono");
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -73,5 +74,27 @@ public class ModificarContratoView extends Composite<VerticalLayout> {
         formLayout2Col.add(textField4);
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
+        layoutRow.add(buttonSecondary);
+    }
+
+    @AnonymousAllowed
+    @PageTitle("Consultas y Reclamaciones")
+    @Route(value = "ConsultasReclamaciones", layout = MainView.class)
+    @Uses(Icon.class)
+    public static class ConsultasView extends Composite<VerticalLayout> {
+
+        public ConsultasView() {
+            Button buttonPrimary = new Button();
+            MultiSelectListBox avatarItems = new MultiSelectListBox();
+            getContent().setWidth("100%");
+            getContent().getStyle().set("flex-grow", "1");
+            buttonPrimary.setText("añadir");
+            buttonPrimary.setWidth("min-content");
+            buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            avatarItems.setWidth("min-content");
+            getContent().add(buttonPrimary);
+            getContent().add(avatarItems);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -19,13 +19,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
-@PageTitle("Modificar Servicio")
-@Route(value = "ModificarServicio", layout = MainView.class)
+@PageTitle("Modificar Contrato")
+@Route(value = "modificarcontrato", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
-public class ModificarServicioView extends Composite<VerticalLayout> {
+public class ModificarContratoView extends Composite<VerticalLayout> {
 
-    public ModificarServicioView() {
+    public ModificarContratoView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
         FormLayout formLayout2Col = new FormLayout();
@@ -50,10 +50,10 @@ public class ModificarServicioView extends Composite<VerticalLayout> {
         formLayout2Col.setWidth("100%");
         textField.setLabel("Nombre");
         textField2.setLabel("Apellidos");
-        datePicker.setLabel("Servicio");
+        datePicker.setLabel("Fecha Nacimiento");
         emailField.setLabel("Email");
-        textField3.setLabel("Coste");
-        textField4.setLabel("Numero de telefono");
+        textField3.setLabel("Puesto de trabajo");
+        textField4.setLabel("Número de telefono");
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
         layoutRow.getStyle().set("flex-grow", "1");
@@ -73,6 +73,5 @@ public class ModificarServicioView extends Composite<VerticalLayout> {
         formLayout2Col.add(textField4);
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
-        layoutRow.add(buttonSecondary);
     }
 }

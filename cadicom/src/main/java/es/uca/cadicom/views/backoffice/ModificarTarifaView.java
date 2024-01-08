@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -20,7 +20,7 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Modificar Tarifa")
-@Route(value = "ModificarTarifa", layout = MainView.class)
+@Route(value = "modificartarifa", layout = MainView.class)
 @AnonymousAllowed
 @Uses(Icon.class)
 public class ModificarTarifaView extends Composite<VerticalLayout> {

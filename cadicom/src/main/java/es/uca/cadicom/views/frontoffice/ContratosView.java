@@ -1,4 +1,4 @@
-package es.uca.cadicom.views;
+package es.uca.cadicom.views.frontoffice;
 
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
@@ -10,6 +10,7 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import es.uca.cadicom.views.backoffice.MainView;
 
 
 @AnonymousAllowed
