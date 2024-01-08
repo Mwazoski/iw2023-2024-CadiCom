@@ -168,4 +168,10 @@ public class UsuarioService implements UserDetailsService {
         }
         return usuario;
     }
+
+    public Usuario findUserById(Long id) throws UsernameNotFoundException {
+        return usuarioRepository.findById(Math.toIntExact(id)).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with id: " + id));
+    }
+
 }

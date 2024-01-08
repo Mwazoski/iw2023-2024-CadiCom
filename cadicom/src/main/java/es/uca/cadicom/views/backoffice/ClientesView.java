@@ -1,7 +1,9 @@
 package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -56,7 +58,6 @@ public class ClientesView extends Composite<VerticalLayout> {
             usuarioGrid.setItems(usuario);
         }
     }
-
     private Grid<Usuario> UsuarioGrid() {
         Grid<Usuario> usuarioGrid = new Grid<>(Usuario.class);
         usuarioGrid.removeAllColumns();
@@ -66,18 +67,17 @@ public class ClientesView extends Composite<VerticalLayout> {
         usuarioGrid.addColumn(Usuario::getApellidos).setHeader("Apellidos");
         usuarioGrid.addColumn(Usuario::getDni).setHeader("Dni");
         usuarioGrid.addColumn(Usuario::getEmail).setHeader("Email");
-        // ... other columns ...
 
-        // Add an edit button column
-        usuarioGrid.addColumn(new ComponentRenderer<>(usuario -> new Button("Edit", clickEvent -> {
-            // Implement your edit logic here
-            editUsuario(usuario);
-        }))).setHeader("Edit");
+        usuarioGrid.addColumn(new ComponentRenderer<>(usuario -> {
+            Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editUsuario(usuario));
+            Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> removeUsuario(usuario));
+            removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-        // Add a remove button column
-        usuarioGrid.addColumn(new ComponentRenderer<>(usuario -> new Button(VaadinIcon.TRASH.create(), clickEvent -> {
-            removeUsuario(usuario);
-        }))).setHeader("Remove");
+            HorizontalLayout actionsLayout = new HorizontalLayout(editButton, removeButton);
+            actionsLayout.setSpacing(true); // Adjust as needed for spacing between buttons
+            return actionsLayout;
+        })).setHeader("Acciones");
+
 
         usuarioGrid.addThemeVariants(GridVariant.LUMO_COMPACT,
                 GridVariant.LUMO_NO_BORDER,
@@ -92,8 +92,9 @@ public class ClientesView extends Composite<VerticalLayout> {
     }
 
     private void editUsuario(Usuario usuario) {
-        System.out.println("Editing User");
+        UI.getCurrent().navigate("clientesmodificar/" + usuario.getId());
     }
+
 
     private void removeUsuario(Usuario usuario) {
         System.out.println("Removing User");
