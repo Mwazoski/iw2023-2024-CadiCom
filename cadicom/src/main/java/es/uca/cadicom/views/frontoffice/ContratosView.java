@@ -15,7 +15,7 @@ import es.uca.cadicom.views.backoffice.MainView;
 
 @AnonymousAllowed
 @PageTitle("Contratos")
-@Route(value = "Contratos", layout = MainView.class)
+@Route(value = "Contratos", layout = FrontLayout.class)
 @Uses(Icon.class)
 public class ContratosView extends Composite<VerticalLayout> {
 

@@ -14,7 +14,7 @@ import es.uca.cadicom.views.backoffice.MainView;
 
 @AnonymousAllowed
 @PageTitle("Facturas")
-@Route(value = "Facturas", layout = MainView.class)
+@Route(value = "Facturas", layout = FrontLayout.class)
 @Uses(Icon.class)
 public class FacturasView extends Composite<VerticalLayout> {
 

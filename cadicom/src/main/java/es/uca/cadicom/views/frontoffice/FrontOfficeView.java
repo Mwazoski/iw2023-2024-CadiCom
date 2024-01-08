@@ -9,16 +9,11 @@ import es.uca.cadicom.views.backoffice.MainView;
 
 @AnonymousAllowed
 @PageTitle("FrontOffice")
-@Route(value = "/cliente", layout = MainView.class)
+@Route(value = "/cliente", layout = FrontLayout.class)
 public class FrontOfficeView extends Div{
 
     public FrontOfficeView() {
-        ComboBox<String> comboBox = new ComboBox<>("Browser");
-        comboBox.setAllowCustomValue(true);
-        add(comboBox);
-        comboBox.setItems("Chrome", "Edge", "Firefox", "Safari");
-        comboBox.setHelperText("Select or type a browser");
-        setText("Bienvenido a la página de inicio. Aquí puedes agregar tu contenido.");
+        
     }
 }
 
