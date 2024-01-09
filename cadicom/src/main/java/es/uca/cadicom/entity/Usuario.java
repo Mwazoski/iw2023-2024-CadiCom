@@ -39,7 +39,7 @@ public class Usuario {
     public void setRole(String role) { this.role = role; }
 
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private Set<Telefono> telefonos;
     public Set<Telefono> getTelefonos() { return telefonos; }
     public void setTelefonos(Set<Telefono> telefonos) { this.telefonos = telefonos; }
@@ -58,6 +58,14 @@ public class Usuario {
         this.setNombre(nombre);
         this.setApellidos(apellidos);
         this.setDni(dni);
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setRole("USUARIO");
+    }
+
+    public Usuario(String nombre, String apellidos, String email, String password){
+        this.setNombre(nombre);
+        this.setApellidos(apellidos);
         this.setEmail(email);
         this.setPassword(password);
         this.setRole("USUARIO");

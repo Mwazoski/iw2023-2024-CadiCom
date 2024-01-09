@@ -3,6 +3,7 @@ import es.uca.cadicom.entity.LineaCliente;
 import es.uca.cadicom.entity.RegistroDatos;
 import es.uca.cadicom.entity.RegistroLlamadas;
 
+import es.uca.cadicom.entity.Usuario;
 import org.apache.hc.core5.net.URIBuilder;
 
 import org.json.simple.JSONArray;
@@ -31,8 +32,8 @@ import java.io.IOException;
 public class ApiService {
 
     private final RestTemplate restTemplate;
-
-    public ApiService(RestTemplate restTemplate) { this.restTemplate = restTemplate; }
+    UsuarioService usuarioService;
+    public ApiService(RestTemplate restTemplate, UsuarioService usuarioService) { this.restTemplate = restTemplate; this.usuarioService = usuarioService; }
 
     public List<LineaCliente> getLineaClienteAll() throws URISyntaxException, IOException, InterruptedException, ParseException {
         List<LineaCliente> lineaClientes = new ArrayList<>();
@@ -53,7 +54,7 @@ public class ApiService {
 
         for (Object o : jsonArray) {
             JSONObject jsonObject = (JSONObject) o;
-
+            generateUserfromLineaCliente(jsonObject);
             LineaCliente lineaCliente = new LineaCliente();
             lineaCliente.setId((String) jsonObject.get("id"));
             lineaCliente.setNombre((String) jsonObject.get("name"));
@@ -66,15 +67,24 @@ public class ApiService {
         return lineaClientes;
     }
 
-    public void setLineaCliente() throws URISyntaxException, IOException, InterruptedException {
+    public void generateUserfromLineaCliente(JSONObject jsonObject) {
+        String name = jsonObject.get("name").toString();
+        String surname = jsonObject.get("surname").toString();
+        String email = name.toLowerCase() + "." + surname.charAt(0) + "@gmail.com";
+
+        Usuario usuario = new Usuario(name, surname, email, "1234");
+        usuarioService.createUser(usuario);
+    }
+
+    public void setLineaCliente(String name, String surname, String carrier, String phoneNumber) throws URISyntaxException, IOException, InterruptedException {
         URI uri = new URIBuilder("http://omr-simulator.us-east-1.elasticbeanstalk.com/")
                 .build();
 
         JSONObject json = new JSONObject();
-        json.put("name", "Pepe");
-        json.put("surname", "Montero");
-        json.put("carrier", "cadicom");
-        json.put("phoneNumber", "654366555");
+        json.put("name", name);
+        json.put("surname", surname);
+        json.put("carrier", carrier);
+        json.put("phoneNumber", phoneNumber);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)

@@ -1,5 +1,6 @@
 package es.uca.cadicom.views.backoffice;
 
+import com.google.protobuf.Api;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -18,10 +19,17 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.cadicom.entity.Factura;
+import es.uca.cadicom.entity.LineaCliente;
+import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 
+import es.uca.cadicom.service.ApiService;
 import es.uca.cadicom.service.UsuarioService;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,18 +40,22 @@ import java.util.List;
 public class ClientesView extends Composite<VerticalLayout> {
 
     private UsuarioService usuarioService;
-    public ClientesView(UsuarioService usuarioService) {
+    private ApiService apiService;
+    Grid<Usuario> usuarioGrid;
+    public ClientesView(UsuarioService usuarioService, ApiService apiService) {
+        this.apiService = apiService;
         this.usuarioService = usuarioService;
-        Grid<Usuario> usuarioGrid = UsuarioGrid();
-        HorizontalLayout searchLayout = createSearchBar(usuarioGrid);
+        this.usuarioGrid = UsuarioGrid();
+        HorizontalLayout searchLayout = createSearchBar();
+        // Button generateUsersButton = new Button(VaadinIcon.PLAY.create(), clickEvent -> {try {apiService.getLineaClienteAll();} catch (URISyntaxException e) { throw new RuntimeException(e); } catch (IOException e) { throw new RuntimeException(e); } catch (InterruptedException e) { throw new RuntimeException(e); } catch (ParseException e) { throw new RuntimeException(e); }});
         getContent().add(searchLayout, usuarioGrid);
     }
 
-    private HorizontalLayout createSearchBar(Grid<Usuario> usuarioGrid) {
+    private HorizontalLayout createSearchBar() {
         TextField emailSearchField = new TextField();
         emailSearchField.setPlaceholder("Search by email");
 
-        Button searchButton = new Button(VaadinIcon.SEARCH.create(), clickEvent -> searchByEmail(emailSearchField.getValue(), usuarioGrid));
+        Button searchButton = new Button(VaadinIcon.SEARCH.create(), clickEvent -> searchByEmail(emailSearchField.getValue(), this.usuarioGrid));
         HorizontalLayout searchLayout = new HorizontalLayout(emailSearchField, searchButton);
         searchLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
 
@@ -58,9 +70,11 @@ public class ClientesView extends Composite<VerticalLayout> {
             usuarioGrid.setItems(usuario);
         }
     }
+
     private Grid<Usuario> UsuarioGrid() {
-        Grid<Usuario> usuarioGrid = new Grid<>(Usuario.class);
+        Grid<Usuario> usuarioGrid = new Grid<>(Usuario.class, false);
         usuarioGrid.removeAllColumns();
+        usuarioGrid.setAllRowsVisible(true);
 
         // Add your custom columns
         usuarioGrid.addColumn(Usuario::getNombre).setHeader("Nombre");
@@ -70,7 +84,19 @@ public class ClientesView extends Composite<VerticalLayout> {
 
         usuarioGrid.addColumn(new ComponentRenderer<>(usuario -> {
             Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editUsuario(usuario));
-            Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> removeUsuario(usuario));
+            Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> {
+                try {
+                    removeUsuario(usuario);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
             HorizontalLayout actionsLayout = new HorizontalLayout(editButton, removeButton);
@@ -84,7 +110,7 @@ public class ClientesView extends Composite<VerticalLayout> {
                 GridVariant.LUMO_NO_ROW_BORDERS);
 
         usuarioGrid.setWidth("100%");
-        // Fetch and set the data from getAllUsers
+
         List<Usuario> usuarios = usuarioService.getAllUsers();
         usuarioGrid.setItems(usuarios);
 
@@ -95,9 +121,18 @@ public class ClientesView extends Composite<VerticalLayout> {
         UI.getCurrent().navigate("clientesmodificar/" + usuario.getId());
     }
 
-
-    private void removeUsuario(Usuario usuario) {
-        System.out.println("Removing User");
+    private void removeUsuario(Usuario usuario) throws URISyntaxException, IOException, ParseException, InterruptedException {
+        for (Telefono telefono : usuario.getTelefonos()) {
+            LineaCliente removeLineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
+            apiService.deleteLineaCliente(removeLineaCliente.getId());
+        }
+        usuarioService.deleteUser(usuario.getEmail());
+        updateGrid();
     }
 
+    private void updateGrid() {
+        List<Usuario> updatedUsers = usuarioService.getAllUsers(); // Assuming a method to fetch all users
+        this.usuarioGrid.setItems(updatedUsers); // 'grid' is your Vaadin Grid instance
+    }
 }
+

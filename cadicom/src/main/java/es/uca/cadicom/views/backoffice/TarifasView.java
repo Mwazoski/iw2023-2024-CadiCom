@@ -37,7 +37,6 @@ public class TarifasView extends Composite<VerticalLayout> {
         Grid<Tarifa> tarifaGrid = new Grid<>(Tarifa.class);
         tarifaGrid.removeAllColumns();
 
-        // Add your custom columns
         tarifaGrid.addColumn(Tarifa::getNombre).setHeader("Nombre");
         tarifaGrid.addColumn(Tarifa::getDatos).setHeader("Datos");
         tarifaGrid.addColumn(Tarifa::getMinutos).setHeader("Minutos");
@@ -50,10 +49,9 @@ public class TarifasView extends Composite<VerticalLayout> {
             removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
             HorizontalLayout actionsLayout = new HorizontalLayout(usuariosButton, editButton, removeButton);
-            actionsLayout.setSpacing(true); // Adjust as needed for spacing between buttons
+            actionsLayout.setSpacing(true);
             return actionsLayout;
         })).setHeader("Acciones");
-
 
         tarifaGrid.addThemeVariants(GridVariant.LUMO_COMPACT,
                 GridVariant.LUMO_NO_BORDER,
