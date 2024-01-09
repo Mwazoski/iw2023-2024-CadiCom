@@ -265,10 +265,12 @@
   "Frontend/generated/jar-resources/vaadin-map/mapConnector.js",
   "Frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js",
   "Frontend/generated/jar-resources/virtualListConnector.js",
+  "Frontend/styles/cardstyle.css",
   "Frontend/styles/landingpage.css"
  ],
  "frontendHashes": {
   "styles/landingpage.css": "a19f3027bcae24c9da7aab9fad236d0ba007c6d850b89d638e6c43317443431f",
+  "styles/cardstyle.css": "ea0d1316bd39fe80443ec993b4e73b2a033795771f863b97d1de6f320951a63c",
   "buttonFunctions.js": "c852123f9b2c44eb75e555119d3e05a7dbe78b91d0ab616feb9df1654474707d",
   "comboBoxConnector.js": "1d004c3dae9c76f8bcc68678abe1b8f7bdc8b456f5c9c4c7f190df8ed25d66cd",
   "contextMenuConnector.js": "8960e00884b9a8b62e24be63e03fe7045dcb9b6844a8a238eb4619d5595e2cfc",
@@ -295,7 +297,7 @@
   "my-theme": "{\n  \"lumoImports\" : [ \"typography\", \"color\", \"spacing\", \"badge\", \"utility\" ]\n}\n"
  },
  "entryScripts": [
-  "VAADIN/build/indexhtml-5473386f.js"
+  "VAADIN/build/indexhtml-2d5e0292.js"
  ],
  "webComponents": [],
  "cvdlModules": {
@@ -330,6 +332,6 @@
  },
  "packageJsonHash": "a77f35734d4275ca6ddc6edc9b2284c4e896ad15f50b4dc957647d2bd5de8abe",
  "indexHtmlGenerated": [
-  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-5473386f.js\"></script>"
+  "  <script type=\"module\" crossorigin src=\"./VAADIN/build/indexhtml-2d5e0292.js\"></script>"
  ]
 }
