@@ -11,7 +11,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,7 +32,7 @@ public class ApiService {
 
     private final RestTemplate restTemplate;
     UsuarioService usuarioService;
-    public ApiService(RestTemplate restTemplate, UsuarioService usuarioService) { this.restTemplate = restTemplate; this.usuarioService = usuarioService; }
+    public ApiService(RestTemplate restTemplate) { this.restTemplate = restTemplate; this.usuarioService = usuarioService; }
 
     public List<LineaCliente> getLineaClienteAll() throws URISyntaxException, IOException, InterruptedException, ParseException {
         List<LineaCliente> lineaClientes = new ArrayList<>();

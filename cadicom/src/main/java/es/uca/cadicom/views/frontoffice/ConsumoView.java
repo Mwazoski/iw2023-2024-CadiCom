@@ -39,6 +39,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ApiService apiService = new ApiService(restTemplate);
+
     public ConsumoView() {
         Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
         if (!usuario.getRole().equals("USUARIO")) {
