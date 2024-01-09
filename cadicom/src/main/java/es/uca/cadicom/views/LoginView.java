@@ -108,6 +108,7 @@ public class LoginView extends VerticalLayout {
             Usuario usuario = new Usuario(tfEmail.getValue(), tfPassword.getValue());
             boolean userCreated = usuarioService.validateUserCredentials(usuario);
             if (userCreated) {
+                usuario = usuarioService.findUserByEmail(usuario.getEmail());
                 UI.getCurrent().getSession().setAttribute("user", usuario);
                 UI.getCurrent().navigate("/cliente");
             } else {
@@ -117,7 +118,4 @@ public class LoginView extends VerticalLayout {
             // Validation errors are automatically shown next to the respective field.
         }
     }
-
-
-
 }
