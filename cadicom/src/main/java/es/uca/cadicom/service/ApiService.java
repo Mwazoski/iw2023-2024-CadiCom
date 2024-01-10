@@ -220,11 +220,40 @@ public class ApiService {
 
             RegistroDatos registroDato = new RegistroDatos();
             registroDato.setDate((String) jsonObject.get("date"));
-            registroDato.setMegaBytes((Integer) jsonObject.get("megaBytes"));
+            registroDato.setMegaBytes(Math.toIntExact((Long) jsonObject.get("megaBytes")));
 
             registroDatos.add(registroDato);
         }
         return registroDatos;
+    }
+
+    public int getRegistroDatosSuma(String uuid, String startDate, String endDate) throws URISyntaxException, IOException, InterruptedException, ParseException {
+
+        int total = 0;
+
+        URI uri = new URIBuilder("http://omr-simulator.us-east-1.elasticbeanstalk.com/" + uuid + "/datausagerecords")
+                .addParameter("carrier", "cadicom")
+                .addParameter("startDate", startDate)
+                .addParameter("endDate", endDate)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .GET()
+                .header("accept", "application/hal+json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.body());
+
+        for (Object o : jsonArray) {
+            JSONObject jsonObject = (JSONObject) o;
+
+            total += Math.toIntExact((Long) jsonObject.get("megaBytes"));
+        }
+        return total;
     }
 
     public List<RegistroLlamadas> getRegistroLlamadas(String uuid, String startDate, String endDate) throws URISyntaxException, IOException, InterruptedException, ParseException {

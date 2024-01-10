@@ -20,6 +20,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 import es.uca.cadicom.entity.LineaCliente;
+import es.uca.cadicom.entity.RegistroDatos;
 import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.ApiService;
@@ -29,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Set;
 
 @PageTitle("Consumo")
@@ -70,8 +72,8 @@ public class ConsumoView extends Composite<VerticalLayout> {
             hlData.setHeight("min-content");
             hlData.setAlignItems(Alignment.CENTER);
             hlData.setJustifyContentMode(JustifyContentMode.START);
-            barData.setValue(0.5); //value barra barData.setValue();
-            //setProgressBarValue(barData);
+            //barData.setValue(0.5); //value barra barData.setValue();
+
 
             NativeLabel nlblData = new NativeLabel("100 GB");// input datos totales
             nlblData.setId("pblblData");
@@ -81,6 +83,8 @@ public class ConsumoView extends Composite<VerticalLayout> {
             Span progressBarLabelValue = new Span("50%"); // input texto derecha
             HorizontalLayout progressBarLabel = new HorizontalLayout(nlblData, progressBarLabelValue);
             progressBarLabel.setJustifyContentMode(JustifyContentMode.BETWEEN);
+
+            setProgressBarValue(barData, progressBarLabelValue, nlblData);
 
             Hr separador1 = new Hr();
             HorizontalLayout hlSms = new HorizontalLayout();
@@ -133,23 +137,29 @@ public class ConsumoView extends Composite<VerticalLayout> {
         }
     }
 
-//    private void setProgressBarValue(ProgressBar progressBar) {
-//        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
-//        Set<Telefono> telefonos = usuario.getTelefonos();
-//        Telefono telefono = (Telefono) telefonos.toArray()[0];
-//        LineaCliente lineaCliente = null;
-//        try {
-//            lineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
-//            System.out.println(lineaCliente.getId());
-//        } catch (URISyntaxException e) {
-//            throw new RuntimeException(e);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+    private void setProgressBarValue(ProgressBar progressBar, Span total, NativeLabel value) {
+        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
+       // Set<Telefono> telefonos = usuario.getTelefonos();
+        LineaCliente lineaCliente = null;
+
+        try {
+            lineaCliente = apiService.getLineaCliente("0cd84b29-4f4e-4b9b-9658-6c0eb8c0f8c9");
+
+            Integer relacion = apiService.getRegistroDatosSuma(lineaCliente.getId(), "2000-11-12", "2024-12-12");
+            System.out.println(relacion / 2000);
+            System.out.println(relacion);
+            progressBar.setValue((1624/2000));
+            value.setText(((Integer)(relacion*100)).toString());
+            total.setText("2000");
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

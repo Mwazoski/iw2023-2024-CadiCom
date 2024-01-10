@@ -110,7 +110,11 @@ public class LoginView extends VerticalLayout {
             if (userCreated) {
                 usuario = usuarioService.findUserByEmail(usuario.getEmail());
                 UI.getCurrent().getSession().setAttribute("user", usuario);
-                UI.getCurrent().navigate("/cliente");
+                if ("USUARIO".equals(usuario.getRole())){
+                    UI.getCurrent().navigate("/cliente");
+                } else if ("ADMIN".equals(usuario.getRole())) {
+                    UI.getCurrent().navigate("/admin");
+                }
             } else {
                 Notification.show("Error: User registration failed.", 3000, Notification.Position.TOP_CENTER);
             }
