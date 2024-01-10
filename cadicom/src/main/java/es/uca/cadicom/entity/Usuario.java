@@ -39,16 +39,18 @@ public class Usuario {
     public void setRole(String role) { this.role = role; }
 
 
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Telefono> telefonos;
+
     public Set<Telefono> getTelefonos() { return telefonos; }
     public void setTelefonos(Set<Telefono> telefonos) { this.telefonos = telefonos; }
-    public void setTelefonos(Telefono telefono) {
+    public void addTelefono(Telefono telefono) {
         if (telefono != null) {
             if (this.telefonos == null) {
-                this.telefonos = new HashSet<Telefono>();
+                this.telefonos = new HashSet<>();
             }
             this.telefonos.add(telefono);
+            telefono.setUsuario(this); // Manage the bidirectional relationship
         }
     }
 

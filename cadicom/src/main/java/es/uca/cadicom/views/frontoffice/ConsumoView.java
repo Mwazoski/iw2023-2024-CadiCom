@@ -24,12 +24,11 @@ import es.uca.cadicom.entity.RegistroDatos;
 import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.ApiService;
-import jakarta.annotation.security.RolesAllowed;
-import org.json.simple.parser.ParseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 

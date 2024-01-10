@@ -1,6 +1,5 @@
 package es.uca.cadicom.views.backoffice;
 
-import com.google.protobuf.Api;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -10,6 +9,8 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -18,19 +19,17 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.cadicom.entity.Factura;
 import es.uca.cadicom.entity.LineaCliente;
 import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 
 import es.uca.cadicom.service.ApiService;
 import es.uca.cadicom.service.UsuarioService;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
 
 @PageTitle("Panel Clientes")
@@ -42,13 +41,14 @@ public class ClientesView extends Composite<VerticalLayout> {
     private UsuarioService usuarioService;
     private ApiService apiService;
     Grid<Usuario> usuarioGrid;
+
     public ClientesView(UsuarioService usuarioService, ApiService apiService) {
         this.apiService = apiService;
         this.usuarioService = usuarioService;
         this.usuarioGrid = UsuarioGrid();
         HorizontalLayout searchLayout = createSearchBar();
-        // Button generateUsersButton = new Button(VaadinIcon.PLAY.create(), clickEvent -> {try {apiService.getLineaClienteAll();} catch (URISyntaxException e) { throw new RuntimeException(e); } catch (IOException e) { throw new RuntimeException(e); } catch (InterruptedException e) { throw new RuntimeException(e); } catch (ParseException e) { throw new RuntimeException(e); }});
-        getContent().add(searchLayout, usuarioGrid);
+        Button generateUsersButton = new Button(VaadinIcon.PLAY.create(), clickEvent -> {try {apiService.getLineaClienteAll();} catch (URISyntaxException e) { throw new RuntimeException(e); } catch (IOException e) { throw new RuntimeException(e); } catch (InterruptedException e) { throw new RuntimeException(e); } catch (ParseException e) { throw new RuntimeException(e); }});
+        getContent().add(generateUsersButton, searchLayout, usuarioGrid);
     }
 
     private HorizontalLayout createSearchBar() {
@@ -66,10 +66,22 @@ public class ClientesView extends Composite<VerticalLayout> {
         if (email == null || email.trim().isEmpty()) {
             usuarioGrid.setItems(usuarioService.getAllUsers()); // Show all users if search field is empty
         } else {
-            Usuario usuario = usuarioService.findUserByEmail(email);
-            usuarioGrid.setItems(usuario);
+            try {
+                Usuario usuario = usuarioService.findUserByEmail(email);
+                usuarioGrid.setItems(usuario);
+            } catch (UsernameNotFoundException e) {
+                Notification notification = new Notification();
+                notification.setText("Usuario no encontrado con email: " + email);
+                notification.setDuration(3000);
+                notification.setPosition(Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+
+                notification.open();
+            }
         }
     }
+
+
 
     private Grid<Usuario> UsuarioGrid() {
         Grid<Usuario> usuarioGrid = new Grid<>(Usuario.class, false);
@@ -127,6 +139,12 @@ public class ClientesView extends Composite<VerticalLayout> {
             apiService.deleteLineaCliente(removeLineaCliente.getId());
         }
         usuarioService.deleteUser(usuario.getEmail());
+        Notification notification = new Notification();
+        notification.setText("Usuario eliminado correctamente");
+        notification.setDuration(3000); // Duration in milliseconds (e.g., 3000 for 3 seconds)
+        notification.setPosition(Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.open();
         updateGrid();
     }
 

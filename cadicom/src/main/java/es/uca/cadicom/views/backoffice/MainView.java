@@ -68,11 +68,10 @@ public class MainView extends AppLayout {
         SideNav nav = new SideNav();
 
         SideNavItem inicioLink = new SideNavItem("Inicio", "admin", VaadinIcon.HOME.create());
-        SideNavItem facturaLink = new SideNavItem("Facturas", "facturaspanel", VaadinIcon.INVOICE.create());
         SideNavItem clientesLink = new SideNavItem("Clientes", "clientespanel", VaadinIcon.USERS.create());
         SideNavItem tarifasLink = new SideNavItem("Tarifas", "tarifaspanel", VaadinIcon.USERS.create());
 
-        nav.addItem(inicioLink, clientesLink, facturaLink, tarifasLink);
+        nav.addItem(inicioLink, clientesLink, tarifasLink);
         return nav;
     }
 
