@@ -1,4 +1,5 @@
 package es.uca.cadicom.entity;
 
-public class Role {
+public enum Role {
+    USER, ADMIN;
 }

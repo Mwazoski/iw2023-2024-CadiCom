@@ -290,6 +290,35 @@ public class ApiService {
         return registroLlamadas;
     }
 
+    public double getRegistroLlamadasSuma(String uuid, String startDate, String endDate) throws URISyntaxException, IOException, InterruptedException, ParseException {
+
+        double total = 0;
+
+        URI uri = new URIBuilder("http://omr-simulator.us-east-1.elasticbeanstalk.com/" + uuid + "/callrecords")
+                .addParameter("carrier", "cadicom")
+                .addParameter("startDate", startDate)
+                .addParameter("endDate", endDate)
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .GET()
+                .header("accept", "application/hal+json")
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(response.body());
+
+        for (Object o : jsonArray) {
+            JSONObject jsonObject = (JSONObject) o;
+            total += ((Integer) jsonObject.get("seconds"));
+
+        }
+        return total;
+    }
+
     public static String getMonthStartDate(int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

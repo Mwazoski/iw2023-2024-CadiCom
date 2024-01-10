@@ -1,48 +1,53 @@
 package es.uca.cadicom.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Usuario {
+public class Usuario extends AbstractEntity{
 
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
+    @Setter
+    @Getter
     private String nombre;
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
 
+    @Setter
+    @Getter
     private String apellidos;
-    public String getApellidos() { return apellidos; }
-    public void setApellidos(String apellidos) { this.apellidos = apellidos; }
 
+    @Setter
+    @Getter
     private String dni;
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
 
+    @Setter
+    @Getter
     private String email;
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
 
+    @Setter
+    @Getter
     private String password;
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
 
-    private String role;
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Role> role;
+    public Set<Role> getRoles() { return role; }
+    public void setRoles(Set<Role> roles) { this.role = roles; }
 
 
+    @Setter
+    @Getter
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private Set<Telefono> telefonos;
-    public Set<Telefono> getTelefonos() { return telefonos; }
-    public void setTelefonos(Set<Telefono> telefonos) { this.telefonos = telefonos; }
+
     public void setTelefonos(Telefono telefono) {
         if (telefono != null) {
             if (this.telefonos == null) {
@@ -60,7 +65,7 @@ public class Usuario {
         this.setDni(dni);
         this.setEmail(email);
         this.setPassword(password);
-        this.setRole("USUARIO");
+        //this.setRole("USUARIO");
     }
 
     public Usuario(String nombre, String apellidos, String email, String password){
@@ -68,7 +73,7 @@ public class Usuario {
         this.setApellidos(apellidos);
         this.setEmail(email);
         this.setPassword(password);
-        this.setRole("USUARIO");
+        //this.setRole("USUARIO");
     }
 
     public Usuario(String email, String password ){
