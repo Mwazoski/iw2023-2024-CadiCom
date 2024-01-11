@@ -23,11 +23,9 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import es.uca.cadicom.entity.Factura;
-import es.uca.cadicom.entity.Tarifa;
-import es.uca.cadicom.entity.Telefono;
-import es.uca.cadicom.entity.Usuario;
+import es.uca.cadicom.entity.*;
 import es.uca.cadicom.service.TarifaService;
+import jakarta.annotation.security.RolesAllowed;
 import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 
 import java.util.List;
@@ -35,7 +33,7 @@ import java.util.Set;
 
 @PageTitle("Panel Tarifas")
 @Route(value = "tarifaspanel", layout = MainView.class)
-@AnonymousAllowed
+@RolesAllowed("ADMIN")
 @Uses(Icon.class)
 public class TarifasView extends Composite<VerticalLayout> {
 

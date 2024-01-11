@@ -28,7 +28,7 @@ import java.util.Optional;
 
 @PageTitle("FrontOffice")
 @Route(value = "/cliente", layout = FrontLayout.class)
-@PermitAll
+@RolesAllowed("USER")
 public class FrontOfficeView extends VerticalLayout {
 
     private final AuthenticatedUser authenticatedUser;
@@ -44,11 +44,7 @@ public class FrontOfficeView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         if (maybeUser.isPresent()) {
             Usuario usuario = maybeUser.get();
-            if (usuario.getAuthorities().stream().anyMatch(auth -> !"USER".equals(auth.getAuthority()))) {
-                UI.getCurrent().navigate("/");
-            } else {
-                add(new H1("Bienvenido " + usuario.getNombre()));
-            }
+            add(new H1("Bienvenido " + usuario.getNombre()));
         }
     }
 }

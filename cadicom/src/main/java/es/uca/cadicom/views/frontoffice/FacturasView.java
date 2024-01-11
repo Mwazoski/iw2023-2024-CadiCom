@@ -17,12 +17,13 @@ import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.FacturaService;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
-@AnonymousAllowed
+@RolesAllowed("USER")
 @PageTitle("Facturas")
 @Route(value = "facturas", layout = FrontLayout.class)
 @Uses(Icon.class)
@@ -36,7 +37,6 @@ public class FacturasView extends Composite<VerticalLayout> {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
         this.facturaService = facturaService;
-
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
         ComboBox<Telefono> cbTelefono = new ComboBox<>("Telefono");

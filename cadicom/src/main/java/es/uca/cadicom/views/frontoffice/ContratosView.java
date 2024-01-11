@@ -1,5 +1,6 @@
 package es.uca.cadicom.views.frontoffice;
 
+import com.vaadin.flow.component.charts.model.Label;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -44,25 +45,19 @@ public class ContratosView extends Composite<VerticalLayout> {
 
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
-        if (maybeUser.isPresent()) {
-            {
-                usuario = maybeUser.get();
-                cbTelefono.setItems(usuario.getTelefonos());
-            }
-            cbTelefono.setItemLabelGenerator(Telefono::getNumero);
-
-            VerticalLayout vlGeneral = new VerticalLayout();
-            vlGeneral.add(cbTelefono);
-            cbTelefono.addValueChangeListener(event -> {
-                Tarifa tarifa = cbTelefono.getValue().getTarifa();
-
-            });
+        if (maybeUser.isPresent()){
+            usuario = maybeUser.get();
+            cbTelefono.setItems(usuario.getTelefonos());
         }
-        Grid<Tarifa> gTarifa = new Grid<>(Tarifa.class);
-        gTarifa.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER,
-                GridVariant.LUMO_NO_ROW_BORDERS);
+        cbTelefono.setItemLabelGenerator(Telefono::getNumero);
 
-        gTarifa.setWidth("100%");
-        gTarifa.getStyle().set("flex-grow", "0");
+        VerticalLayout vlGeneral = new VerticalLayout();
+        vlGeneral.add(cbTelefono);
+        cbTelefono.addValueChangeListener(event -> {
+            Tarifa tarifa = cbTelefono.getValue().getTarifa();
+            Label lblNombre = new Label(tarifa.getNombre());
+            Label lblData = new Label(tarifa.getDatos().toString());
+            Label lblSec = new Label(tarifa.getMinutos().toString());
+        });
     }
 }

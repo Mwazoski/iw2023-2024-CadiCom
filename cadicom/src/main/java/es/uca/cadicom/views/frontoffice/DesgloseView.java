@@ -16,6 +16,7 @@ import es.uca.cadicom.entity.*;
 import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.ApiService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.util.*;
 
 @PageTitle("Historial")
 @Route(value = "historial", layout = FrontLayout.class)
-@PermitAll
+@RolesAllowed("USER")
 @Uses(Icon.class)
 public class DesgloseView extends Composite<VerticalLayout> {
 
@@ -38,9 +39,10 @@ public class DesgloseView extends Composite<VerticalLayout> {
 
     private final DatePicker dpInicio = new DatePicker("Inicio");
     private final DatePicker dpFinal = new DatePicker("Final");
-    public DesgloseView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+    public DesgloseView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, ApiService apiService) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
+        this.apiService = apiService;
 
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
@@ -50,21 +52,27 @@ public class DesgloseView extends Composite<VerticalLayout> {
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         tabSheet.setWidth("100%");
-        setTabSheet(tabSheet);
 
         LocalDate now = LocalDate.now(ZoneId.systemDefault());
 
         DatePicker dpInicio = new DatePicker("Inicio");
         DatePicker dpFinal = new DatePicker("Final");
         dpInicio.setMax(now);
+        dpInicio.setInitialPosition(now);
         dpFinal.setMax(now);
+        dpFinal.setOpened(false);
+        dpInicio.addValueChangeListener(event -> {
+                    dpFinal.setOpened(true);
+        });
         dpInicio.addValueChangeListener(e -> dpFinal.setMin(e.getValue()));
-        dpFinal.addValueChangeListener(e -> dpInicio.setMax(e.getValue()));
+        dpFinal.addValueChangeListener(e -> {
+            dpInicio.setMax(e.getValue());
+            setTabSheet(tabSheet);
+        });
 
         HorizontalLayout hlFechas = new HorizontalLayout();
 
         hlFechas.add(dpInicio, dpFinal);
-
         getContent().add(hlFechas);
         getContent().add(tabSheet);
 
@@ -72,7 +80,6 @@ public class DesgloseView extends Composite<VerticalLayout> {
 
     private void setTabSheet(TabSheet tabSheet) {
         VerticalLayout vlLlamada = new VerticalLayout();
-
 
         Grid<RegistroLlamadas> gLlamada = new Grid<>(RegistroLlamadas.class);
         gLlamada.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER,

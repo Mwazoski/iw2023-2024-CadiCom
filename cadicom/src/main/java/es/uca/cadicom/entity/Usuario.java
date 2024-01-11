@@ -45,7 +45,7 @@ public class Usuario  extends AbstractEntity implements UserDetails {
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
-        return this.getRoles().stream().map(role -> new SimpleGrantedAuthority("" + role))
+        return this.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
 
     }
