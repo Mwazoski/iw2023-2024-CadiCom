@@ -9,6 +9,8 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
@@ -251,6 +253,8 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
                     if (t.getNombre().equals(txtTarifa)) telefono.setTarifa(t);
                 }
             }
+            telefono.setRoaming(false);
+            telefono.setCompartirDatos(false);
             telefono.setUsuario(usuario);
             telefonoService.createTelefono(telefono);
             UI.getCurrent().getPage().reload();
@@ -272,7 +276,7 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
 
                 TabSheet tabView = new TabSheet();
                 Grid<Factura> facturaGrid = facturaGrid(this.usuario);
-                Grid<Telefono> telefonoGrid = telefonoGrid(this.usuario);
+                Grid<Telefono> telefonoGrid = telefonoGrid();
                 Button button = new Button(VaadinIcon.EDIT.create());
 
                 VerticalLayout showDatosPersonalesSection = showDatosPersonalesSection(this.usuario, userID);
@@ -294,7 +298,7 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         }
     }
 
-    private Grid<Telefono> telefonoGrid(Usuario usuario) {
+    private Grid<Telefono> telefonoGrid() {
         Grid<Telefono> telefonoGrid = new Grid<>(Telefono.class, false);
         telefonoGrid.removeAllColumns();
         telefonoGrid.setAllRowsVisible(true);
@@ -308,16 +312,19 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
 
         telefonoGrid.addColumn(Telefono::getNumero).setHeader("Numero");
         telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
-            // Assuming getTarifa() returns a Tarifa object and you want to display its name
             String tarifaName = telefono.getTarifa() != null ? telefono.getTarifa().getNombre() : "N/A";
             return new Text(tarifaName);
         })).setHeader("Tarifa");
-        telefonoGrid.addColumn(Telefono::getRoaming).setHeader("Roaming");
-        telefonoGrid.addColumn(Telefono::getCompartirDatos).setHeader("Datos");
         telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
-//            Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editTelefono(telefono));
+            return new Text(telefono.getRoaming() ? "Si" : "No");
+        })).setHeader("Roaming");
+
+        telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
+            return new Text(telefono.getCompartirDatos() ? "Si" : "No");
+        })).setHeader("Datos");
+        telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
             Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> {
-                removeTelefono(telefono);
+                removeTelefono(telefono, telefonoGrid);
             });
             removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
@@ -335,13 +342,26 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         return telefonoGrid;
     }
 
-    private void removeTelefono(Telefono telefono) {
+    private void removeTelefono(Telefono telefono, Grid<Telefono> telefonoGrid) {
+        telefonoService.deleteTelefono(telefono.getId());
+        usuario.removeOneTelefono(telefono);
 
+
+        Notification notification = new Notification();
+        notification.setText("Telefono eliminado correctamente");
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.open();
+
+        Set<Telefono> telefonos = null;
+        if (usuario != null) {
+            telefonos = usuario.getTelefonos();
+        } else {
+            System.out.println("No user");
+        }
+        telefonoGrid.setItems(telefonos);
     }
-
-//    private void editTelefono(Telefono telefono) {
-//
-//    }
 
     private Grid<Factura> facturaGrid(Usuario usuario) {
         Grid<Factura> facturaGrid = new Grid<>(Factura.class, false);
@@ -349,15 +369,13 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         facturaGrid.setAllRowsVisible(true);
 
         List<Factura> facturas = new ArrayList<>();
-        Set<Telefono> telefonos = null;
-        if (usuario != null) {
-            telefonos = usuario.getTelefonos();
+        if (usuario != null && usuario.getTelefonos() != null) {
+            for (Telefono telefono : usuario.getTelefonos()) {
+                List<Factura> facturasDelTelefono = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
+                facturas.addAll(facturasDelTelefono);
+            }
         } else {
-            System.out.println("No user");
-        }
-
-        for (Telefono telefono : telefonos) {
-            facturas = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
+            System.out.println("No user or no telefonos");
         }
 
         facturaGrid.addColumn(Factura::getPeriodo).setHeader("Periodo");
@@ -365,13 +383,13 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         facturaGrid.addColumn(Factura::getMinutos).setHeader("Minutos");
         facturaGrid.addColumn(Factura::getImporte).setHeader("Importe");
         facturaGrid.addColumn(new ComponentRenderer<>(factura -> {
-            Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editFactura(factura));
+            //Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editFactura(factura));
             Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> {
-                removeFactura(factura);
+                removeFactura(factura, facturaGrid);
             });
             removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-            HorizontalLayout actionsLayout = new HorizontalLayout(editButton, removeButton);
+            HorizontalLayout actionsLayout = new HorizontalLayout(removeButton);
             actionsLayout.setSpacing(true); // Adjust as needed for spacing between buttons
             return actionsLayout;
         })).setHeader("Acciones");
@@ -388,6 +406,25 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
 
     private void editFactura(Factura factura) { }
 
-    private void removeFactura(Factura factura) { }
+    private void removeFactura(Factura factura, Grid<Factura> facturaGrid) {
+        facturaService.deleteFactura(factura.getId());
+        Notification notification = new Notification();
+        notification.setText("Factura eliminada correctamente");
+        notification.setDuration(3000);
+        notification.setPosition(Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.open();
+        List<Factura> upatedFacturas = new ArrayList<>();
+        Set<Telefono> telefonos = null;
+        if (usuario != null) {
+            telefonos = usuario.getTelefonos();
+        } else {
+            System.out.println("No user");
+        }
+        for (Telefono telefono : telefonos) {
+            upatedFacturas = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
+        }
+        facturaGrid.setItems(upatedFacturas);
+    }
 
 }

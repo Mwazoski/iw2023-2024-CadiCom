@@ -14,8 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-public class Usuario  extends AbstractEntity implements UserDetails {
-
+public class Usuario extends AbstractEntity implements UserDetails{
     @Setter
     @Getter
     @Id
@@ -98,6 +97,13 @@ public class Usuario  extends AbstractEntity implements UserDetails {
             telefono.setUsuario(this); // Manage the bidirectional relationship
         }
     }
+    public void removeOneTelefono(Telefono telefono) {
+        if (telefono != null && this.telefonos != null && this.telefonos.contains(telefono)) {
+            this.telefonos.remove(telefono);
+            telefono.setUsuario(null); // Desvincula el telefono del usuario
+        }
+    }
+
 
     public Usuario() {}
 
@@ -107,7 +113,7 @@ public class Usuario  extends AbstractEntity implements UserDetails {
         this.setDni(dni);
         this.setEmail(email);
         this.setPassword(password);
-        this.addRoles(Role.USER);
+        this.addRoles(Role.ADMIN);
     }
 
     public Usuario(String nombre, String apellidos, String email, String password){
