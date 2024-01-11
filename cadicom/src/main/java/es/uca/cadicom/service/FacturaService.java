@@ -2,10 +2,12 @@ package es.uca.cadicom.service;
 
 import es.uca.cadicom.entity.Factura;
 import es.uca.cadicom.repository.FacturaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class FacturaService {
 
     private final FacturaRepository facturaRepository;
@@ -23,7 +25,7 @@ public class FacturaService {
         return facturaRepository.findById(Math.toIntExact(id));
     }
 
-    public List<Factura> getAllFacturasByTelefonoId(Long telefonoId) {
+        public List<Factura> getAllFacturasByTelefonoId(Long telefonoId) {
         return facturaRepository.findByTelefonoId(Math.toIntExact(telefonoId));
     }
 

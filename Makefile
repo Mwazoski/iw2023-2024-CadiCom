@@ -22,8 +22,14 @@ status:
 start:
 	docker exec -i debian_slim bash -c "mvn spring-boot:run"
 
+startd:
+	docker exec debian_slim bash -c "mvn spring-boot:run"
+
 clean:
 	docker exec -i debian_slim bash -c "mvn clean"
+
+install:
+	docker exec -i debian_slim bash -c "mvn clean install"
 
 stop:
 	docker-compose stop

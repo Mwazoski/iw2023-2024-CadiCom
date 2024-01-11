@@ -65,7 +65,7 @@ public class TarifaService {
             return;
         }
 
-        Optional<Tarifa> tarifa = tarifaRepository.findById(Math.toIntExact(id));
+        Optional<Tarifa> tarifa = tarifaRepository.findById(id);
 
         if (tarifa.isPresent()) {
             tarifaRepository.delete(tarifa.get());

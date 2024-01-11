@@ -1,9 +1,7 @@
 package es.uca.cadicom.service;
-import es.uca.cadicom.entity.LineaCliente;
-import es.uca.cadicom.entity.RegistroDatos;
-import es.uca.cadicom.entity.RegistroLlamadas;
+import es.uca.cadicom.entity.*;
 
-import es.uca.cadicom.entity.Usuario;
+import jakarta.transaction.Transactional;
 import org.apache.hc.core5.net.URIBuilder;
 
 import org.json.simple.JSONArray;
@@ -30,9 +28,15 @@ import java.io.IOException;
 @Service
 public class ApiService {
 
-    private final RestTemplate restTemplate;
+    RestTemplate restTemplate;
     UsuarioService usuarioService;
-    public ApiService(RestTemplate restTemplate) { this.restTemplate = restTemplate; this.usuarioService = usuarioService; }
+    TelefonoService telefonoService;
+
+    public ApiService(RestTemplate restTemplate, UsuarioService usuarioService, TelefonoService telefonoService) {
+        this.restTemplate = restTemplate;
+        this.usuarioService = usuarioService;
+        this.telefonoService = telefonoService;
+    }
 
     public List<LineaCliente> getLineaClienteAll() throws URISyntaxException, IOException, InterruptedException, ParseException {
         List<LineaCliente> lineaClientes = new ArrayList<>();
@@ -54,6 +58,7 @@ public class ApiService {
         for (Object o : jsonArray) {
             JSONObject jsonObject = (JSONObject) o;
             generateUserfromLineaCliente(jsonObject);
+            generateTelefonofromLineaCliente(jsonObject);
             LineaCliente lineaCliente = new LineaCliente();
             lineaCliente.setId((String) jsonObject.get("id"));
             lineaCliente.setNombre((String) jsonObject.get("name"));
@@ -66,13 +71,28 @@ public class ApiService {
         return lineaClientes;
     }
 
+    @Transactional
     public void generateUserfromLineaCliente(JSONObject jsonObject) {
         String name = jsonObject.get("name").toString();
         String surname = jsonObject.get("surname").toString();
-        String email = name.toLowerCase() + "." + surname.charAt(0) + "@gmail.com";
+        String email = name.toLowerCase() + "." + surname.toLowerCase() + "@gmail.com";
+        String number = jsonObject.get("phoneNumber").toString();
 
         Usuario usuario = new Usuario(name, surname, email, "1234");
         usuarioService.createUser(usuario);
+    }
+
+    @Transactional
+    public void generateTelefonofromLineaCliente(JSONObject jsonObject) {
+
+        String name = jsonObject.get("name").toString();
+        String surname = jsonObject.get("surname").toString();
+        String email = name.toLowerCase() + "." + surname.toLowerCase() + "@gmail.com";
+        String number = jsonObject.get("phoneNumber").toString();
+
+        Usuario usuario = usuarioService.getUser(email);
+        Telefono telefono = new Telefono(number, usuario);
+        telefonoService.createTelefono(telefono);
     }
 
     public void setLineaCliente(String name, String surname, String carrier, String phoneNumber) throws URISyntaxException, IOException, InterruptedException {

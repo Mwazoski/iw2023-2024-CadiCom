@@ -25,7 +25,7 @@ public class Factura {
 
     @ManyToOne
     private Telefono telefono;
-    public Telefono getTelefono() { return telefono; }
+    public String getTelefono() { return telefono.getNumero(); }
     public void setTelefono(Telefono telefono) { this.telefono = telefono; }
     public void setTelefono(String telefono) { this.telefono.setNumero(telefono); }
 

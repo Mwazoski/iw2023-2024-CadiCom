@@ -87,7 +87,7 @@ public class UsuarioService implements UserDetailsService {
             return;
         }
 
-        Optional<Usuario> userOpt = Optional.ofNullable(usuarioRepository.findByEmail(updatedUser.getEmail()));
+        Optional<Usuario> userOpt = (usuarioRepository.findById(updatedUser.getId()));
 
         if (userOpt.isPresent()) {
             Usuario existingUser = userOpt.get();
@@ -105,6 +105,11 @@ public class UsuarioService implements UserDetailsService {
             if (updatedUser.getPassword() != null) {
                 existingUser.setPassword(updatedUser.getPassword());
             }
+
+            if (updatedUser.getEmail() != null) {
+                existingUser.setEmail(updatedUser.getEmail());
+            }
+
             usuarioRepository.save(existingUser);
             System.out.println("User with email " + updatedUser.getEmail() + " has been updated.");
         } else {
@@ -173,7 +178,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     public Usuario findUserById(Long id) throws UsernameNotFoundException {
-        return usuarioRepository.findById(Math.toIntExact(id)).orElseThrow(() ->
+        return usuarioRepository.findById(id).orElseThrow(() ->
                 new UsernameNotFoundException("User not found with id: " + id));
     }
 

@@ -48,6 +48,11 @@ public class Telefono {
         this.setTarifa(tarifa);
     }
 
+    public Telefono(String numero, Usuario usuario) {
+        this.setNumero(numero);
+        this.setUsuario(usuario);
+    }
+
     public Telefono(String numero) {
         this.setNumero(numero);
     }
