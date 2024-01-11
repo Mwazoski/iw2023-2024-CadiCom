@@ -14,8 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-public class Usuario  extends AbstractEntity implements UserDetails {
-
+public class Usuario extends AbstractEntity implements UserDetails{
     @Setter
     @Getter
     @Id
