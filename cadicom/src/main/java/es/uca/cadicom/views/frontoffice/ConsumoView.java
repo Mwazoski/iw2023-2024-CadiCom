@@ -26,6 +26,8 @@ import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.ApiService;
+import es.uca.cadicom.service.FacturaService;
+import es.uca.cadicom.service.UsuarioService;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -42,17 +44,23 @@ import java.util.Set;
 @Uses(Icon.class)
 public class ConsumoView extends Composite<VerticalLayout> {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ApiService apiService = new ApiService(restTemplate);
     private final AuthenticatedUser authenticatedUser;
     private final AccessAnnotationChecker accessChecker;
     private Usuario usuario;
     LocalDate now = LocalDate.now(ZoneId.systemDefault());
+    private final RestTemplate restTemplate;
+    private final UsuarioService usuarioService;
+    private final ApiService apiService;
+    private final FacturaService facturaService;
 
-    public ConsumoView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+
+    public ConsumoView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, RestTemplate restTemplate, ApiService apiService, UsuarioService usuarioService, FacturaService facturaService) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
-
+        this.restTemplate = restTemplate;
+        this.apiService = apiService;
+        this.usuarioService = usuarioService;
+        this.facturaService = facturaService;
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
 
