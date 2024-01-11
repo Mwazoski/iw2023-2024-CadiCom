@@ -8,12 +8,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import jakarta.annotation.security.RolesAllowed;
 
 @PageTitle("Usuario")
 @Route(value = "usuario", layout = FrontLayout.class)
-@AnonymousAllowed
+@RolesAllowed("USER")
 @Uses(Icon.class)
-
 public class UserView extends Composite<VerticalLayout> {
 
 }

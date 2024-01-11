@@ -30,6 +30,7 @@ import org.springframework.security.core.userdetails.User;
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
+
 public class FrontLayout extends AppLayout {
 
     private final AccessAnnotationChecker accessChecker;
@@ -71,7 +72,7 @@ public class FrontLayout extends AppLayout {
         nav.addItem(new SideNavItem("Consumo", "consumo", VaadinIcon.DASHBOARD.create()));
         nav.addItem(new SideNavItem("Historial", "historial", VaadinIcon.DATABASE.create()));
         nav.addItem(new SideNavItem("Facturas", "facturas", VaadinIcon.FILE.create()));
-        nav.addItem(new SideNavItem("Usuario", "usuario", VaadinIcon.USER.create()));
+        nav.addItem(new SideNavItem("Contratos", "contratos", VaadinIcon.PACKAGE.create()));
         nav.addClassNames(LumoUtility.Margin.MEDIUM);
         return nav;
     }
@@ -84,7 +85,7 @@ public class FrontLayout extends AppLayout {
             Usuario usuario = maybeUser.get();
 
             Avatar avatar = new Avatar(usuario.getNombre());
-            avatar.setThemeName("xsmall");
+            avatar.setThemeName("small");
             avatar.getElement().setAttribute("tabindex", "-1");
 
             MenuBar userMenu = new MenuBar();
@@ -99,7 +100,11 @@ public class FrontLayout extends AppLayout {
             div.getElement().getStyle().set("align-items", "center");
             div.getElement().getStyle().set("gap", "var(--lumo-space-s)");
             userName.add(div);
-            userName.getSubMenu().addItem("Sign out", e -> {
+
+            userName.getSubMenu().addItem("Editar perfil", e -> {
+                UI.getCurrent().navigate(UserView.class);
+            });
+            userName.getSubMenu().addItem("Cerrar sesión", e -> {
                 authenticatedUser.logout();
             });
 
@@ -122,6 +127,4 @@ public class FrontLayout extends AppLayout {
         PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
         return title == null ? "" : title.value();
     }
-
-
 }

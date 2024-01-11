@@ -1,5 +1,9 @@
 package es.uca.cadicom.views.frontoffice;
 
+import com.vaadin.flow.component.checkbox.CheckboxGroup;
+import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -10,26 +14,56 @@ import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import es.uca.cadicom.entity.Tarifa;
+import es.uca.cadicom.entity.Telefono;
+import es.uca.cadicom.entity.Usuario;
+import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.views.backoffice.MainView;
+import jakarta.annotation.security.PermitAll;
+
+import java.util.Optional;
 
 
-@AnonymousAllowed
+@PermitAll
 @PageTitle("Contratos")
-@Route(value = "Contratos", layout = FrontLayout.class)
+@Route(value = "contratos", layout = FrontLayout.class)
 @Uses(Icon.class)
 public class ContratosView extends Composite<VerticalLayout> {
 
-    public ContratosView() {
-        Button buttonPrimary = new Button();
-        MultiSelectListBox avatarItems = new MultiSelectListBox();
-        getContent().setWidth("100%");
-        getContent().getStyle().set("flex-grow", "1");
-        buttonPrimary.setText("añadir");
-        buttonPrimary.setWidth("min-content");
-        buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        avatarItems.setWidth("min-content");
-        getContent().add(buttonPrimary);
-        getContent().add(avatarItems);
-    }
+    private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
+    private Usuario usuario;
 
+    public ContratosView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+        this.authenticatedUser = authenticatedUser;
+        this.accessChecker = accessChecker;
+
+        ComboBox<Telefono> cbTelefono = new ComboBox<>("Telefono");
+
+        Optional<Usuario> maybeUser = authenticatedUser.get();
+
+        if (maybeUser.isPresent()) {
+            {
+                usuario = maybeUser.get();
+                cbTelefono.setItems(usuario.getTelefonos());
+            }
+            cbTelefono.setItemLabelGenerator(Telefono::getNumero);
+
+            VerticalLayout vlGeneral = new VerticalLayout();
+            vlGeneral.add(cbTelefono);
+        }
+
+        if(cbTelefono.isEmpty()){
+            Tarifa tarifa = cbTelefono.getValue().getTarifa();
+
+            CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
+            checkboxGroup.setLabel("Opciones del número");
+            checkboxGroup.setItems("Compartir datos", "Roaming");
+
+            checkboxGroup.select("", "Roaming");
+            checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
+            getContent().add(checkboxGroup);
+        }
+
+    }
 }

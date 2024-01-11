@@ -81,9 +81,9 @@ public class Usuario extends AbstractEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> role = new HashSet<>();
     public Set<Role> getRoles() { return role; }
-    public void setRole(Set<Role> roles) { this.role = roles; }
+    public void setRoles(Set<Role> roles) { this.role = roles; }
 
-    public void addRole(Role role) {
+    public void addRoles(Role role) {
         this.role.add(role);
     }
 

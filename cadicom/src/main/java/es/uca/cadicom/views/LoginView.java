@@ -1,8 +1,11 @@
 package es.uca.cadicom.views;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -21,35 +24,35 @@ import java.util.Optional;
 @AnonymousAllowed
 @PageTitle("Login")
 @Route(value = "login")
-public class LoginView extends Div implements BeforeEnterObserver {
+public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
-    LoginOverlay loginOverlay = new LoginOverlay();
+    private LoginForm loginForm = new LoginForm();
+
     Header header = new Header();
     public LoginView(AuthenticatedUser authenticatedUser) {
 
         this.authenticatedUser = authenticatedUser;
 
-        LoginOverlay loginOverlay = new LoginOverlay();
-        loginOverlay.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
         LoginI18n i18n = LoginI18n.createDefault();
         LoginI18n.Form i18nForm = i18n.getForm();
-        i18n.setHeader(new LoginI18n.Header());
         i18nForm.setTitle("Inicio Sesión");
         i18nForm.setUsername("Correo electrónico");
         i18nForm.setPassword("Contraseña");
         i18nForm.setSubmit("Iniciar sesión");
         i18n.setForm(i18nForm);
         i18n.setAdditionalInformation(null);
-        loginOverlay.setI18n(i18n);
 
-
-
-        loginOverlay.setForgotPasswordButtonVisible(false);
-        loginOverlay.setOpened(true);
+        setSizeFull();
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
+        setDefaultHorizontalComponentAlignment(Alignment.CENTER);
 
         add(header);
-        add(loginOverlay);
+        loginForm.setI18n(i18n);
+        loginForm.setForgotPasswordButtonVisible(false);
+        loginForm.setAction(RouteUtil.getRoutePath(VaadinService.getCurrent().getContext(), getClass()));
+        add(loginForm);
     }
 
     @Override
@@ -59,22 +62,19 @@ public class LoginView extends Div implements BeforeEnterObserver {
             // Already logged in
             Usuario usuario = maybeUser.get();
 
-            loginOverlay.setOpened(false);
             List<GrantedAuthority> authorities = usuario.getAuthorities();
-            System.out.println("Roles del usuario:");
             for (GrantedAuthority authority : authorities) {
                 System.out.println(authority.getAuthority());
+                System.out.println("USER".equals(authority.getAuthority()));
             }
             if (authorities.stream().anyMatch(auth -> "USER".equals(auth.getAuthority()))) {
-                System.out.println("CLIENTE");
                 event.forwardTo("/cliente");
             } else if(authorities.stream().anyMatch(auth -> "ADMIN".equals(auth.getAuthority()))){
-                System.out.println("ADMIN");
                 event.forwardTo("/admin");
             }
 
         }
 
-        loginOverlay.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
+        loginForm.setError(event.getLocation().getQueryParameters().getParameters().containsKey("error"));
     }
 }
