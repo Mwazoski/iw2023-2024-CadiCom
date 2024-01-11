@@ -3,6 +3,8 @@ package es.uca.cadicom.views.frontoffice;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
@@ -51,19 +53,16 @@ public class ContratosView extends Composite<VerticalLayout> {
 
             VerticalLayout vlGeneral = new VerticalLayout();
             vlGeneral.add(cbTelefono);
+            cbTelefono.addValueChangeListener(event -> {
+                Tarifa tarifa = cbTelefono.getValue().getTarifa();
+
+            });
         }
+        Grid<Tarifa> gTarifa = new Grid<>(Tarifa.class);
+        gTarifa.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER,
+                GridVariant.LUMO_NO_ROW_BORDERS);
 
-        if(cbTelefono.isEmpty()){
-            Tarifa tarifa = cbTelefono.getValue().getTarifa();
-
-            CheckboxGroup<String> checkboxGroup = new CheckboxGroup<>();
-            checkboxGroup.setLabel("Opciones del número");
-            checkboxGroup.setItems("Compartir datos", "Roaming");
-
-            checkboxGroup.select("", "Roaming");
-            checkboxGroup.addThemeVariants(CheckboxGroupVariant.LUMO_VERTICAL);
-            getContent().add(checkboxGroup);
-        }
-
+        gTarifa.setWidth("100%");
+        gTarifa.getStyle().set("flex-grow", "0");
     }
 }

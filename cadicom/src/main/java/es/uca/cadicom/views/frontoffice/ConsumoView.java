@@ -126,7 +126,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.setAlignItems(Alignment.CENTER);
         hlLlamada.setJustifyContentMode(JustifyContentMode.START);
         h2Llamada.setWidth("max-content");
-        barLlamada.setValue(0.5); //value barra barLlamada.setValue();
+        //barLlamada.setValue(0.5); //value barra barLlamada.setValue();
 
         NativeLabel nlblLlamada = new NativeLabel("100 Sec");// input datos totales
         nlblLlamada.setId("pblblData");
@@ -137,11 +137,10 @@ public class ConsumoView extends Composite<VerticalLayout> {
         HorizontalLayout progressBarLabelLlamada = new HorizontalLayout(nlblLlamada, progressBarLabelValueLlamada);
         progressBarLabelLlamada.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-        if(!cbTelefono.isEmpty()) {
-            setProgressBarValueData(barData, progressBarLabelValueData, nlblData, cbTelefono.getValue());
-            setProgressBarValueData(barLlamada, progressBarLabelValueLlamada, nlblLlamada, cbTelefono.getValue());
-        }
-
+        cbTelefono.addValueChangeListener(event -> {
+            setProgressBarValueData(barData, progressBarLabelValueData, nlblData, event.getValue());
+            setProgressBarValueData(barLlamada, progressBarLabelValueLlamada, nlblLlamada, event.getValue());
+        });
 
         getContent().add(vlGeneral);
         vlGeneral.add(hlData);
@@ -163,7 +162,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
         try {
             lineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
             relacion = apiService.getRegistroDatosSuma(lineaCliente.getId(), apiService.getMonthStartDate(now.getYear(), now.getMonthValue()), apiService.getMonthEndDate(now.getYear(), now.getMonthValue())) / datosTarifa;
-            progressBar.setValue(relacion);
+            progressBar.setValue(0.5);
             value.setText(String.valueOf((int) (relacion * 100)));
             total.setText(Double.toString(relacion).split("\\.")[0]);
         } catch (URISyntaxException | IOException | InterruptedException | ParseException e) {

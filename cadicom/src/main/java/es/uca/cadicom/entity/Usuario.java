@@ -14,21 +14,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-public class Usuario {
+public class Usuario  extends AbstractEntity implements UserDetails {
 
     @Setter
     @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+
 
     @Setter
     @Getter
     private String nombre;
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
 
     @Setter
     @Getter
@@ -37,21 +34,14 @@ public class Usuario {
     @Setter
     @Getter
     private String dni;
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni; }
 
     @Setter
     @Getter
     private String email;
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
 
     @Setter
     @Getter
     private String password;
-
-
-
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
@@ -117,7 +107,7 @@ public class Usuario {
         this.setDni(dni);
         this.setEmail(email);
         this.setPassword(password);
-        //this.setRole("USUARIO");
+        this.addRoles(Role.USER);
     }
 
     public Usuario(String nombre, String apellidos, String email, String password){
@@ -125,7 +115,7 @@ public class Usuario {
         this.setApellidos(apellidos);
         this.setEmail(email);
         this.setPassword(password);
-        //this.setRole("USUARIO");
+        this.addRoles(Role.USER);
     }
 
     public Usuario(String email, String password ){

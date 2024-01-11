@@ -333,7 +333,7 @@ public class ApiService {
 
         for (Object o : jsonArray) {
             JSONObject jsonObject = (JSONObject) o;
-            total += ((Integer) jsonObject.get("seconds"));
+            total += ((Double)jsonObject.get("seconds"));
 
         }
         return total;

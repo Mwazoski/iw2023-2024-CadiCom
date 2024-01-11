@@ -32,9 +32,10 @@ public class FacturasView extends Composite<VerticalLayout> {
     private final AccessAnnotationChecker accessChecker;
     private Usuario usuario;
 
-    public FacturasView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+    public FacturasView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker, FacturaService facturaService) {
         this.authenticatedUser = authenticatedUser;
         this.accessChecker = accessChecker;
+        this.facturaService = facturaService;
 
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
@@ -52,13 +53,16 @@ public class FacturasView extends Composite<VerticalLayout> {
                 GridVariant.LUMO_NO_ROW_BORDERS);
         gFactura.setWidth("100%");
         gFactura.getStyle().set("flex-grow", "0");
-        if(!cbTelefono.isEmpty()) setGridFacturas(gFactura, cbTelefono.getValue());
+        cbTelefono.addValueChangeListener(event -> {
+            setGridFacturas(gFactura, event.getValue());
+        });
         getContent().add(gFactura);
+
     }
 
     private void setGridFacturas(Grid grid, Telefono telefono) {
         grid.setItems(facturaService.getAllFacturasByTelefonoId((long)telefono.getId()));
     }
 
-    private FacturaService facturaService;
+    private final FacturaService facturaService;
 }
