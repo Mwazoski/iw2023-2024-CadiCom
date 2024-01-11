@@ -253,6 +253,8 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
                     if (t.getNombre().equals(txtTarifa)) telefono.setTarifa(t);
                 }
             }
+            telefono.setRoaming(false);
+            telefono.setCompartirDatos(false);
             telefono.setUsuario(usuario);
             telefonoService.createTelefono(telefono);
             UI.getCurrent().getPage().reload();
@@ -367,15 +369,13 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         facturaGrid.setAllRowsVisible(true);
 
         List<Factura> facturas = new ArrayList<>();
-        Set<Telefono> telefonos = null;
-        if (usuario != null) {
-            telefonos = usuario.getTelefonos();
+        if (usuario != null && usuario.getTelefonos() != null) {
+            for (Telefono telefono : usuario.getTelefonos()) {
+                List<Factura> facturasDelTelefono = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
+                facturas.addAll(facturasDelTelefono);
+            }
         } else {
-            System.out.println("No user");
-        }
-
-        for (Telefono telefono : telefonos) {
-            facturas = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
+            System.out.println("No user or no telefonos");
         }
 
         facturaGrid.addColumn(Factura::getPeriodo).setHeader("Periodo");

@@ -113,7 +113,7 @@ public class Usuario extends AbstractEntity implements UserDetails{
         this.setDni(dni);
         this.setEmail(email);
         this.setPassword(password);
-        this.addRoles(Role.USER);
+        this.addRoles(Role.ADMIN);
     }
 
     public Usuario(String nombre, String apellidos, String email, String password){

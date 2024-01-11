@@ -25,6 +25,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.cadicom.entity.*;
 import es.uca.cadicom.service.TarifaService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 
@@ -33,7 +34,7 @@ import java.util.Set;
 
 @PageTitle("Panel Tarifas")
 @Route(value = "tarifaspanel", layout = MainView.class)
-@RolesAllowed("ADMIN")
+@PermitAll
 @Uses(Icon.class)
 public class TarifasView extends Composite<VerticalLayout> {
 

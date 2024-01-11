@@ -51,7 +51,6 @@ public class UsuarioService implements UserDetailsService {
         try {
             String encryptedPassword = passwordEncoder.encode(usuario.getPassword());
             usuario.setPassword(encryptedPassword);
-            usuario.addRoles(Role.USER);
             usuarioRepository.save(usuario);
             return true;
         } catch (Exception e) {
