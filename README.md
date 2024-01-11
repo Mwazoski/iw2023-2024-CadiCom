@@ -6,8 +6,7 @@ Carlos Flethes Montesinos
 Alvaro Orellana Serrano  
 
 ### Link autoevaluación
-https://docs.google.com/spreadsheets/d/1YYYh1-6LfwRERAKGqIkD1n4vm1kE5nXo5vskcLg5I8M/edit?usp=sharing
-
+https://docs.google.com/spreadsheets/d/1l7mJAbHB67L6dBHAW9Miert09DWFSZs_6LwknHJae2Y/edit?usp=sharing
 ### Setup Proyecto
 
 Una vez hecho el clone del proyecto, tenemos disponibles los siguientes comandos:
