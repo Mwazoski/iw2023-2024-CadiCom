@@ -97,6 +97,13 @@ public class Usuario extends AbstractEntity implements UserDetails{
             telefono.setUsuario(this); // Manage the bidirectional relationship
         }
     }
+    public void removeOneTelefono(Telefono telefono) {
+        if (telefono != null && this.telefonos != null && this.telefonos.contains(telefono)) {
+            this.telefonos.remove(telefono);
+            telefono.setUsuario(null); // Desvincula el telefono del usuario
+        }
+    }
+
 
     public Usuario() {}
 

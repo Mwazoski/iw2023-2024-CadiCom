@@ -37,8 +37,8 @@ public class FacturaService {
         return facturaRepository.save(updatedFactura);
     }
 
-    public void deleteFactura(Long id) {
-        if (!facturaRepository.existsById(Math.toIntExact(id))) {
+    public void deleteFactura(Integer id) {
+        if (!facturaRepository.existsById(id)) {
             throw new IllegalArgumentException("Factura with id " + id + " does not exist");
         }
         facturaRepository.deleteById(Math.toIntExact(id));

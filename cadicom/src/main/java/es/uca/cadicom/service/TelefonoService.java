@@ -92,13 +92,13 @@ public class TelefonoService {
         return existingTelefono;
     }
 
-    public void deleteTelefono(Long id) {
+    public void deleteTelefono(Integer id) {
         if (id == null) {
             System.err.println("ID is null.");
             return;
         }
 
-        Optional<Telefono> telefono = telefonoRepository.findById(Math.toIntExact(id));
+        Optional<Telefono> telefono = telefonoRepository.findById(id);
 
         if (telefono.isPresent()) {
             telefonoRepository.delete(telefono.get());
@@ -107,6 +107,7 @@ public class TelefonoService {
             System.err.println("Telefono with ID " + id + " not found.");
         }
     }
+
 
     public Telefono getTelefonoNumero(String numero) {
         if (numero == null || numero.trim().isEmpty()) {

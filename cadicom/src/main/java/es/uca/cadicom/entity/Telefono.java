@@ -51,6 +51,8 @@ public class Telefono {
     public Telefono(String numero, Usuario usuario) {
         this.setNumero(numero);
         this.setUsuario(usuario);
+        this.setRoaming(false);
+        this.setCompartirDatos(false);
     }
 
     public Telefono(String numero) {
