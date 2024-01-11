@@ -25,6 +25,9 @@ start:
 clean:
 	docker exec -i debian_slim bash -c "mvn clean"
 
+install:
+	docker exec -i debian_slim bash -c "mvn clean install"
+
 stop:
 	docker-compose stop
 
