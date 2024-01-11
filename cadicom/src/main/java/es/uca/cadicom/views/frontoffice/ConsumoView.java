@@ -1,6 +1,7 @@
 package es.uca.cadicom.views.frontoffice;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.Composite;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
@@ -22,12 +24,16 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import es.uca.cadicom.entity.LineaCliente;
 import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
+import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.ApiService;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Optional;
 import java.util.Set;
 
 @PageTitle("Consumo")
@@ -38,10 +44,28 @@ public class ConsumoView extends Composite<VerticalLayout> {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ApiService apiService = new ApiService(restTemplate);
+    private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessChecker;
+    private Usuario usuario;
+    LocalDate now = LocalDate.now(ZoneId.systemDefault());
 
-    public ConsumoView() {
-        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
+    public ConsumoView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+        this.authenticatedUser = authenticatedUser;
+        this.accessChecker = accessChecker;
+
+        Optional<Usuario> maybeUser = authenticatedUser.get();
+
+
+        ComboBox<Telefono> cbTelefono = new ComboBox<>("Telefono");
+        if (maybeUser.isPresent()) {
+            usuario = maybeUser.get();
+            cbTelefono.setItems(usuario.getTelefonos());
+        }
+
+        cbTelefono.setItemLabelGenerator(Telefono::getNumero);
+
         VerticalLayout vlGeneral = new VerticalLayout();
+        vlGeneral.add(cbTelefono);
 
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
@@ -74,11 +98,11 @@ public class ConsumoView extends Composite<VerticalLayout> {
         h2Data.setWidth("max-content");
         barData.getElement().setAttribute("aria-labelledby", "pblblData");
 
-        Span progressBarLabelValue = new Span("50%"); // input texto derecha
-        HorizontalLayout progressBarLabel = new HorizontalLayout(nlblData, progressBarLabelValue);
+        Span progressBarLabelValueData = new Span("50%"); // input texto derecha
+        HorizontalLayout progressBarLabel = new HorizontalLayout(nlblData, progressBarLabelValueData);
         progressBarLabel.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-        setProgressBarValueData(barData, progressBarLabelValue, nlblData);
+
 
         Hr separador2 = new Hr();
         HorizontalLayout hlLlamada = new HorizontalLayout();
@@ -101,11 +125,14 @@ public class ConsumoView extends Composite<VerticalLayout> {
         h2Data.setWidth("max-content");
         barData.getElement().setAttribute("aria-labelledby", "pblblData");
 
-        Span progressBarLabelValueLlamada = new Span("50%"); // input texto derecha
+        Span progressBarLabelValueLlamada = new Span("0%"); // input texto derecha
         HorizontalLayout progressBarLabelLlamada = new HorizontalLayout(nlblLlamada, progressBarLabelValueLlamada);
         progressBarLabelLlamada.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-        setProgressBarValueData(barLlamada, progressBarLabelValueLlamada, nlblLlamada);
+        if(!cbTelefono.isEmpty()) {
+            setProgressBarValueData(barData, progressBarLabelValueData, nlblData, cbTelefono.getValue());
+            setProgressBarValueData(barLlamada, progressBarLabelValueLlamada, nlblLlamada, cbTelefono.getValue());
+        }
 
 
         getContent().add(vlGeneral);
@@ -121,16 +148,13 @@ public class ConsumoView extends Composite<VerticalLayout> {
 
     }
 
-    private void setProgressBarValueData(ProgressBar progressBar, Span total, NativeLabel value) {
-        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
-        // Set<Telefono> telefonos = usuario.getTelefonos();
+    private void setProgressBarValueData(ProgressBar progressBar, Span total, NativeLabel value, Telefono telefono) {
         LineaCliente lineaCliente = null;
-        Double datosTarifa = 4000d; //susrituir
+        Double datosTarifa = telefono.getTarifa().getDatos();
         Double relacion;
         try {
-            lineaCliente = apiService.getLineaCliente("0cd84b29-4f4e-4b9b-9658-6c0eb8c0f8c9");
-
-            relacion = apiService.getRegistroDatosSuma(lineaCliente.getId(), "2000-11-12", "2024-12-12") / datosTarifa;
+            lineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
+            relacion = apiService.getRegistroDatosSuma(lineaCliente.getId(), apiService.getMonthStartDate(now.getYear(), now.getMonthValue()), apiService.getMonthEndDate(now.getYear(), now.getMonthValue())) / datosTarifa;
             progressBar.setValue(relacion);
             value.setText(String.valueOf((int) (relacion * 100)));
             total.setText(Double.toString(relacion).split("\\.")[0]);
@@ -139,16 +163,13 @@ public class ConsumoView extends Composite<VerticalLayout> {
         }
     }
 
-    private void setProgressBarValueSec(ProgressBar progressBar, Span total, NativeLabel value) {
-        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
-        Set<Telefono> telefonos = usuario.getTelefonos();
+    private void setProgressBarValueSec(ProgressBar progressBar, Span total, NativeLabel value, Telefono telefono) {
         LineaCliente lineaCliente = null;
-        Double secTarifa = 4000d; //susrituir
+        Double secTarifa = (double) telefono.getTarifa().getMinutos();
         Double relacion;
         try {
-            lineaCliente = apiService.getLineaCliente("0cd84b29-4f4e-4b9b-9658-6c0eb8c0f8c9");
-
-            relacion = apiService.getRegistroLlamadasSuma(lineaCliente.getId(), "2000-11-12", "2024-12-12")/secTarifa;
+            lineaCliente = apiService.getLineaClienteTelefono(telefono.getNumero());
+            relacion = apiService.getRegistroLlamadasSuma(lineaCliente.getId(), apiService.getMonthStartDate(now.getYear(), now.getMonthValue()), apiService.getMonthEndDate(now.getYear(), now.getMonthValue()))/secTarifa;
             progressBar.setValue(relacion);
             value.setText(String.valueOf((int)(relacion*100)));
             total.setText(Double.toString(relacion).split("\\.")[0]);

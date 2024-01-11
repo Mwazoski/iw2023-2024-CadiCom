@@ -1,7 +1,6 @@
 package es.uca.cadicom.views.frontoffice;
 
 import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
@@ -12,33 +11,41 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.auth.AnonymousAllowed;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import es.uca.cadicom.entity.*;
+import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.ApiService;
+import jakarta.annotation.security.PermitAll;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @PageTitle("Historial")
 @Route(value = "historial", layout = FrontLayout.class)
-@AnonymousAllowed
+@PermitAll
 @Uses(Icon.class)
 public class DesgloseView extends Composite<VerticalLayout> {
 
+    private final AccessAnnotationChecker accessChecker;
+    private final AuthenticatedUser authenticatedUser;
+    private Usuario usuario;
     private ApiService apiService;
 
-    private DatePicker dpInicio = new DatePicker("Inicio");
-    private DatePicker dpFinal = new DatePicker("Final");
-    public DesgloseView(){
+    private final DatePicker dpInicio = new DatePicker("Inicio");
+    private final DatePicker dpFinal = new DatePicker("Final");
+    public DesgloseView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessChecker) {
+        this.authenticatedUser = authenticatedUser;
+        this.accessChecker = accessChecker;
+
+        Optional<Usuario> maybeUser = authenticatedUser.get();
+
+        if (maybeUser.isPresent()) { usuario = maybeUser.get();}
+
         TabSheet tabSheet = new TabSheet();
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
@@ -65,7 +72,6 @@ public class DesgloseView extends Composite<VerticalLayout> {
 
     private void setTabSheet(TabSheet tabSheet) {
         VerticalLayout vlLlamada = new VerticalLayout();
-        Date fechaActual = new Date();
 
 
         Grid<RegistroLlamadas> gLlamada = new Grid<>(RegistroLlamadas.class);
@@ -78,7 +84,7 @@ public class DesgloseView extends Composite<VerticalLayout> {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        getUserId().forEach(id ->{
+        getUserTelefonosIds().forEach(id ->{
             try {
                 Llamadas.addAll(apiService.getRegistroLlamadas(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
             } catch (URISyntaxException | IOException | InterruptedException | ParseException e) {
@@ -100,7 +106,7 @@ public class DesgloseView extends Composite<VerticalLayout> {
         gData.getStyle().set("flex-grow", "0");
         vlData.add(gData);
         List<RegistroDatos> data = new ArrayList<>();
-        getUserId().forEach(id ->{
+        getUserTelefonosIds().forEach(id ->{
             try {
                 data.addAll(apiService.getRegistroDatos(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
             } catch (URISyntaxException | IOException | InterruptedException | ParseException ex) {
@@ -113,8 +119,8 @@ public class DesgloseView extends Composite<VerticalLayout> {
 
     }
 
-    private List<String> getUserId(){
-        Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
+    private List<String> getUserTelefonosIds(){
+
         Set<Telefono> telefonos = usuario.getTelefonos();
 
         List<String> UUIDS = new ArrayList<>();

@@ -1,5 +1,6 @@
 package es.uca.cadicom.service;
 
+import es.uca.cadicom.entity.Role;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UsuarioService implements UserDetailsService {
@@ -49,6 +51,7 @@ public class UsuarioService implements UserDetailsService {
         try {
             String encryptedPassword = passwordEncoder.encode(usuario.getPassword());
             usuario.setPassword(encryptedPassword);
+            usuario.addRole(Role.USER);
             usuarioRepository.save(usuario);
             return true;
         } catch (Exception e) {
@@ -147,7 +150,7 @@ public class UsuarioService implements UserDetailsService {
     public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
         CustomAuthenticationSuccessHandler handler = new CustomAuthenticationSuccessHandler();
         handler.setUseReferer(false);
-        handler.setDefaultTargetUrl("/panel");
+        handler.setDefaultTargetUrl("/cliente");
         return handler;
     }
 

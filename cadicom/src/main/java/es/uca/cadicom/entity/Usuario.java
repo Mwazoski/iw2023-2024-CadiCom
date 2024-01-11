@@ -3,12 +3,18 @@ package es.uca.cadicom.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
-public class Usuario extends AbstractEntity{
+public class Usuario extends AbstractEntity implements UserDetails {
 
     @Setter
     @Getter
@@ -36,18 +42,55 @@ public class Usuario extends AbstractEntity{
     @Getter
     private String password;
 
+
+
+
+    @Override
+    public List<GrantedAuthority> getAuthorities() {
+        return this.getRoles().stream().map(role -> new SimpleGrantedAuthority("" + role))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Role> role;
+    private Set<Role> role = new HashSet<>();
     public Set<Role> getRoles() { return role; }
-    public void setRoles(Set<Role> roles) { this.role = roles; }
+    public void setRole(Set<Role> roles) { this.role = roles; }
 
+    public void addRole(Role role) {
+        this.role.add(role);
+    }
 
-    @Setter
-    @Getter
     @OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER)
     private Set<Telefono> telefonos;
-
+    public Set<Telefono> getTelefonos() { return telefonos; }
+    public void setTelefonos(Set<Telefono> telefonos) { this.telefonos = telefonos; }
     public void setTelefonos(Telefono telefono) {
         if (telefono != null) {
             if (this.telefonos == null) {
@@ -80,4 +123,6 @@ public class Usuario extends AbstractEntity{
         this.setEmail(email);
         this.setPassword(password);
     }
+
+
 }
