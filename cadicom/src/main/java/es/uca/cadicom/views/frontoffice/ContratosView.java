@@ -6,6 +6,11 @@ import com.vaadin.flow.component.checkbox.CheckboxGroupVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.component.Composite;
@@ -55,9 +60,26 @@ public class ContratosView extends Composite<VerticalLayout> {
         vlGeneral.add(cbTelefono);
         cbTelefono.addValueChangeListener(event -> {
             Tarifa tarifa = cbTelefono.getValue().getTarifa();
-            Label lblNombre = new Label(tarifa.getNombre());
-            Label lblData = new Label(tarifa.getDatos().toString());
-            Label lblSec = new Label(tarifa.getMinutos().toString());
+            H1 hTarifa = new H1("Tarifa");
+
+            H5 hNombre = new H5("Nombre");
+            Paragraph pNombre = new Paragraph(tarifa.getNombre());
+            HorizontalLayout hlNombre = new HorizontalLayout(hNombre, pNombre);
+            hlNombre.setAlignItems(FlexComponent.Alignment.CENTER);
+
+            H5 hDatos = new H5("Datos");
+            Paragraph pDatos = new Paragraph(tarifa.getDatos().toString());
+            HorizontalLayout hlDatos = new HorizontalLayout(hDatos, pDatos);
+            hlDatos.setAlignItems(FlexComponent.Alignment.CENTER);
+
+            H5 hMinutos = new H5("Minutos");
+            Paragraph pMinutos = new Paragraph(tarifa.getMinutos().toString());
+            HorizontalLayout hlMinutos = new HorizontalLayout(hMinutos, pMinutos);
+            hlMinutos.setAlignItems(FlexComponent.Alignment.CENTER);
+
+
+            getContent().add(cbTelefono,hTarifa,hlNombre,hlDatos,hlMinutos);
+
         });
     }
 }

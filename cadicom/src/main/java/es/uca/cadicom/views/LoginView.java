@@ -12,6 +12,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.internal.RouteUtil;
 import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.cadicom.components.Header;
 import es.uca.cadicom.entity.Usuario;
@@ -21,19 +22,23 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.coyote.http11.Constants.a;
+
 @AnonymousAllowed
 @PageTitle("Login")
 @Route(value = "login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessAnnotationChecker;
     private LoginForm loginForm = new LoginForm();
 
-    Header header = new Header();
-    public LoginView(AuthenticatedUser authenticatedUser) {
+    Header header;
+    public LoginView(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessAnnotationChecker) {
 
         this.authenticatedUser = authenticatedUser;
-
+        this.accessAnnotationChecker = accessAnnotationChecker;
+        header = new Header(authenticatedUser, accessAnnotationChecker);
         LoginI18n i18n = LoginI18n.createDefault();
         LoginI18n.Form i18nForm = i18n.getForm();
         i18nForm.setTitle("Inicio Sesión");

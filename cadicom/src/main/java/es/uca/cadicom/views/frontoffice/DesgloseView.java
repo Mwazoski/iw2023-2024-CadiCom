@@ -94,11 +94,11 @@ public class DesgloseView extends Composite<VerticalLayout> {
         getUserTelefonosIds().forEach(id ->{
             try {
                 Llamadas.addAll(apiService.getRegistroLlamadas(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
+                gLlamada.setItems(Llamadas);
             } catch (URISyntaxException | IOException | InterruptedException | ParseException e) {
                 throw new RuntimeException(e);
             }
         });
-        gLlamada.setItems(Llamadas);
 
         VerticalLayout vlData = new VerticalLayout();
 
@@ -116,14 +116,14 @@ public class DesgloseView extends Composite<VerticalLayout> {
         getUserTelefonosIds().forEach(id ->{
             try {
                 data.addAll(apiService.getRegistroDatos(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
+                gData.setItems(data);
             } catch (URISyntaxException | IOException | InterruptedException | ParseException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        gData.setItems(data);
 
         tabSheet.add("Datos", vlData);
-
+        getContent().add(tabSheet);
     }
 
     private List<String> getUserTelefonosIds(){

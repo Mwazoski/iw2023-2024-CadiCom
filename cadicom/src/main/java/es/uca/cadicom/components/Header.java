@@ -6,11 +6,21 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import es.uca.cadicom.entity.Usuario;
+import es.uca.cadicom.security.AuthenticatedUser;
+
+import java.util.Optional;
 
 public class Header extends HorizontalLayout{
 
-    public Header() {
+    private AuthenticatedUser authenticatedUser;
+    private final AccessAnnotationChecker accessAnnotationChecker;
+
+    public Header(AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessAnnotationChecker) {
+        this.authenticatedUser = authenticatedUser;
+        this.accessAnnotationChecker = accessAnnotationChecker;
 
         HorizontalLayout headerRow = new HorizontalLayout();
         HorizontalLayout headerRowNested = new HorizontalLayout();
@@ -22,6 +32,21 @@ public class Header extends HorizontalLayout{
         });
         buttonPrimary.addClickListener(event -> {
             getUI().ifPresent(ui -> ui.navigate("register"));
+        });
+
+        Button buttonRedirect = new Button("Comenzar");
+        buttonRedirect.addClickListener(event -> {
+            Optional<Usuario> maybeUser = authenticatedUser.get();
+            if (maybeUser.isPresent()) {
+                Usuario usuario = maybeUser.get();
+                System.out.println("HOLA");
+                usuario.getAuthorities().forEach(e -> System.out.println(e.getAuthority()));
+                if(usuario.getAuthorities().stream().anyMatch(e -> "ROLE_USER".equals(e.getAuthority()))){
+                    UI.getCurrent().navigate("/cliente");
+                } else if(usuario.getAuthorities().stream().anyMatch(e -> "ROLE_ADMIN".equals(e.getAuthority()))){
+                    UI.getCurrent().navigate("/admin");
+                }
+            }
         });
 
         H2 h2 = new H2("CADICOM");
@@ -52,11 +77,18 @@ public class Header extends HorizontalLayout{
         buttonTertiary.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        buttonRedirect.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         add(headerRow);
         headerRow.add(h2);
         headerRow.add(headerRowNested);
-        headerRowNested.add(buttonTertiary);
-        headerRowNested.add(buttonPrimary);
+        Optional<Usuario> maybeUser = authenticatedUser.get();
+
+        if (maybeUser.isPresent()) {
+            headerRowNested.add(buttonRedirect);
+        } else {
+            headerRowNested.add(buttonTertiary);
+            headerRowNested.add(buttonPrimary);
+        }
     }
 }

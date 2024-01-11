@@ -12,8 +12,10 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AccessAnnotationChecker;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import es.uca.cadicom.entity.Usuario;
+import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.UsuarioService;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -27,7 +29,7 @@ import com.vaadin.flow.data.binder.Binder;
 @Route("/register")
 public class RegisterView extends VerticalLayout {
 
-    Header header = new Header();
+    Header header;
     private final UsuarioService usuarioService;
     private Binder<Usuario> binder = new Binder<>(Usuario.class);
 
@@ -51,9 +53,11 @@ public class RegisterView extends VerticalLayout {
 
     H2 h2 = new H2("Registro");
 
-    public RegisterView(UsuarioService usuarioService) {
+    public RegisterView(UsuarioService usuarioService, AuthenticatedUser authenticatedUser, AccessAnnotationChecker accessAnnotationChecker) {
 
         this.usuarioService = usuarioService;
+
+        header = new Header(authenticatedUser, accessAnnotationChecker);
         setSizeFull();
         VerticalLayout vLayout = new VerticalLayout();
 

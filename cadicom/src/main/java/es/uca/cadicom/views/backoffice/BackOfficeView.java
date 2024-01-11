@@ -10,10 +10,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Admin Panel")
 @Route(value = "admin", layout = MainView.class)
-@AnonymousAllowed
+@PermitAll
 @Uses(Icon.class)
 public class BackOfficeView extends Composite<VerticalLayout> {
 
