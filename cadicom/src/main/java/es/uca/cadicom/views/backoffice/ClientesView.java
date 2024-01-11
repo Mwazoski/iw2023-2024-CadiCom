@@ -47,7 +47,7 @@ public class ClientesView extends Composite<VerticalLayout> {
         this.usuarioService = usuarioService;
         this.usuarioGrid = UsuarioGrid();
         HorizontalLayout searchLayout = createSearchBar();
-        Button generateUsersButton = new Button(VaadinIcon.PLAY.create(), clickEvent -> {try {apiService.getLineaClienteAll();} catch (URISyntaxException e) { throw new RuntimeException(e); } catch (IOException e) { throw new RuntimeException(e); } catch (InterruptedException e) { throw new RuntimeException(e); } catch (ParseException e) { throw new RuntimeException(e); }});
+        Button generateUsersButton = new Button(VaadinIcon.PLAY.create(), clickEvent -> {try {apiService.getLineaClienteAll(); UI.getCurrent().getPage().reload();} catch (URISyntaxException e) { throw new RuntimeException(e); } catch (IOException e) { throw new RuntimeException(e); } catch (InterruptedException e) { throw new RuntimeException(e); } catch (ParseException e) { throw new RuntimeException(e); }});
         getContent().add(generateUsersButton, searchLayout, usuarioGrid);
     }
 
@@ -129,9 +129,7 @@ public class ClientesView extends Composite<VerticalLayout> {
         return usuarioGrid;
     }
 
-    private void editUsuario(Usuario usuario) {
-        UI.getCurrent().navigate("clientesmodificar/" + usuario.getId());
-    }
+    private void editUsuario(Usuario usuario) { UI.getCurrent().navigate("clientesmodificar/" + usuario.getId()); }
 
     private void removeUsuario(Usuario usuario) throws URISyntaxException, IOException, ParseException, InterruptedException {
         for (Telefono telefono : usuario.getTelefonos()) {
@@ -141,7 +139,7 @@ public class ClientesView extends Composite<VerticalLayout> {
         usuarioService.deleteUser(usuario.getEmail());
         Notification notification = new Notification();
         notification.setText("Usuario eliminado correctamente");
-        notification.setDuration(3000); // Duration in milliseconds (e.g., 3000 for 3 seconds)
+        notification.setDuration(3000);
         notification.setPosition(Notification.Position.TOP_CENTER);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         notification.open();

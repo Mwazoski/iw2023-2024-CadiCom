@@ -1,5 +1,6 @@
 package es.uca.cadicom.views.frontoffice;
 
+import com.google.protobuf.Api;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.NativeLabel;
 import com.vaadin.flow.component.html.Span;
@@ -24,6 +25,8 @@ import es.uca.cadicom.entity.RegistroDatos;
 import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.ApiService;
+import es.uca.cadicom.service.FacturaService;
+import es.uca.cadicom.service.UsuarioService;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -38,10 +41,17 @@ import java.util.Set;
 @Uses(Icon.class)
 public class ConsumoView extends Composite<VerticalLayout> {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ApiService apiService = new ApiService(restTemplate);
+    private final RestTemplate restTemplate;
+    private final UsuarioService usuarioService;
+    private final ApiService apiService;
+    private final FacturaService facturaService;
 
-    public ConsumoView() {
+    public ConsumoView(RestTemplate restTemplate, ApiService apiService, UsuarioService usuarioService, FacturaService facturaService) {
+        this.restTemplate = restTemplate;
+        this.apiService = apiService;
+        this.usuarioService = usuarioService;
+        this.facturaService = facturaService;
+
         Usuario usuario = (Usuario) UI.getCurrent().getSession().getAttribute("user");
         if (!usuario.getRole().equals("USUARIO")) {
             UI.getCurrent().navigate("/");
@@ -152,11 +162,9 @@ public class ConsumoView extends Composite<VerticalLayout> {
             total.setText("2000");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (IOException | org.json.simple.parser.ParseException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,6 +1,8 @@
 package es.uca.cadicom.views.backoffice;
 
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -28,11 +30,14 @@ import es.uca.cadicom.entity.Telefono;
 import es.uca.cadicom.entity.Usuario;
 import es.uca.cadicom.service.FacturaService;
 import es.uca.cadicom.service.TarifaService;
+import es.uca.cadicom.service.TelefonoService;
 import es.uca.cadicom.service.UsuarioService;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @PageTitle("Panel Clientes")
 @Route(value = "clientesmodificar", layout = MainView.class)
@@ -42,28 +47,48 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
     private final UsuarioService usuarioService;
     private final FacturaService facturaService;
     private final TarifaService tarifaService;
+    private final TelefonoService telefonoService;
     private Usuario usuario;
 
-    public ModificarClienteView(UsuarioService usuarioService, FacturaService facturaService, TarifaService tarifaService) {
+    public ModificarClienteView(UsuarioService usuarioService, FacturaService facturaService, TarifaService tarifaService, TelefonoService telefonoService) {
         this.usuarioService = usuarioService;
         this.facturaService = facturaService;
         this.tarifaService = tarifaService;
+        this.telefonoService = telefonoService;
     }
 
-    private VerticalLayout createDatosPersonalesSection(Usuario usuario) {
-
-        VerticalLayout layout = new VerticalLayout();
-        layout.setWidth("100%");
-        Set<Telefono> telefonos = usuario.getTelefonos();
+    private VerticalLayout datosPersonalesSection(Button button , Usuario usuario, VerticalLayout showDatosPersonalesSection, VerticalLayout editableDatosPersonalesSection, Long userID  ) {
 
         H2 hTitulo = new H2("Datos Personales");
-        Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> System.out.println("Click on edit user!"));
-        HorizontalLayout htTitleEdit = new HorizontalLayout(hTitulo, editButton);
+        HorizontalLayout htTitleEdit = new HorizontalLayout(hTitulo, button);
         htTitleEdit.setWidth("100%");
         htTitleEdit.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
         htTitleEdit.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
 
+        button.addClickListener(clickEvent -> {
+            if (showDatosPersonalesSection.isVisible()){
+                button.setIcon(VaadinIcon.SAFE.create());
+                showDatosPersonalesSection.setVisible(false);
+                editableDatosPersonalesSection.setVisible(true);
 
+            } else {
+                button.setIcon(VaadinIcon.EDIT.create());
+                editableDatosPersonalesSection.setVisible(false);
+                UI.getCurrent().getPage().reload();
+            }
+        });
+
+        VerticalLayout vParent = new VerticalLayout(htTitleEdit, showDatosPersonalesSection, editableDatosPersonalesSection);
+        return vParent;
+    }
+
+    private VerticalLayout showDatosPersonalesSection(Usuario usuario, Long userID) {
+
+        usuario = usuarioService.findUserById(userID);
+
+        VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
+        Set<Telefono> telefonos = usuario.getTelefonos();
 
         H5 hNombre = new H5("Nombre");
         Paragraph pNombre = new Paragraph(usuario.getNombre());
@@ -85,7 +110,57 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         HorizontalLayout hlEmail = new HorizontalLayout(hEmail, pEmail);
         hlEmail.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        layout.add(htTitleEdit, hlNombre, hlApellidos, hlEmail, hlDni);
+        layout.add(hlNombre, hlApellidos, hlEmail, hlDni);
+
+        return layout;
+    }
+
+    private VerticalLayout editableDatosPersonalesSection(Button saveButton, Usuario usuario) {
+
+        VerticalLayout layout = new VerticalLayout();
+        layout.setWidth("100%");
+
+        H5 hNombre = new H5("Nombre");
+        TextField pNombre = new TextField();
+        pNombre.setPlaceholder(usuario.getNombre());
+        HorizontalLayout hlNombre = new HorizontalLayout(hNombre, pNombre);
+        hlNombre.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        H5 hApellidos = new H5("Apellidos");
+        TextField pApellidos = new TextField();
+        pApellidos.setPlaceholder(usuario.getApellidos());
+        HorizontalLayout hlApellidos = new HorizontalLayout(hApellidos, pApellidos);
+        hlApellidos.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        H5 hDni = new H5("Dni");
+        TextField pDni = new TextField();
+        pDni.setPlaceholder(usuario.getDni());
+        HorizontalLayout hlDni = new HorizontalLayout(hDni, pDni);
+        hlDni.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        H5 hEmail = new H5("Email");
+        TextField pEmail = new TextField();
+        pEmail.setPlaceholder(usuario.getEmail());
+        HorizontalLayout hlEmail = new HorizontalLayout(hEmail, pEmail);
+        hlEmail.setAlignItems(FlexComponent.Alignment.CENTER);
+
+        saveButton.addClickListener(clickEvent -> {
+
+            String newNombre = pNombre.getValue();
+            String newApellidos = pApellidos.getValue();
+            String newDni = pDni.getValue();
+            String newEmail = pEmail.getValue();
+
+            if (!newNombre.isEmpty()) usuario.setNombre(newNombre);
+            if (!newApellidos.isEmpty()) usuario.setApellidos(newApellidos);
+            if (!newDni.isEmpty()) usuario.setDni(newDni);
+            if (!newEmail.isEmpty()) usuario.setEmail(newEmail);
+
+            usuarioService.updateUser(usuario);
+
+        });
+
+        layout.add(hlNombre, hlApellidos, hlEmail, hlDni);
 
         return layout;
     }
@@ -98,51 +173,54 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
 
         H2 titulo = new H2("Facturas");
 
+        @NotBlank
         TextField txtImporte = new TextField("Importe");
 
+        @NotBlank
         DatePicker txtPeriodo = new DatePicker("Periodo");
 
+        @NotBlank
         TextField txtMinutos = new TextField("Minutos");
 
+        @NotBlank
         ComboBox<String> select = new ComboBox<>("Telefono");
         select.setAllowCustomValue(true);
-        for (Telefono telefono : telefonos){ select.setItems(telefono.getNumero()); }
-        Button addButton = new Button("Add Factura");
+        List<String> numtelefonos = telefonos.stream()
+                .map(Telefono::getNumero)
+                .collect(Collectors.toList());
+        select.setItems(numtelefonos);
 
-        horizontalLayout.add(txtImporte,txtMinutos,txtPeriodo,select, addButton);
+        Button addButton = new Button("Add Factura");
+        addButton.addClickListener(clickEvent -> {
+
+            Factura factura = new Factura();
+            Double importe = Double.valueOf(txtImporte.getValue());
+            String periodo = String.valueOf(txtPeriodo.getValue());
+            Integer minutos = Integer.valueOf(txtMinutos.getValue());
+            String telefono = select.getValue();
+
+            if (!importe.isNaN()) factura.setImporte(importe);
+            if (!periodo.isEmpty()) factura.setPeriodo(periodo);
+            if (minutos != 0) factura.setMinutos(minutos);
+            if (!telefono.isEmpty()) {
+                Set<Telefono> ts = usuario.getTelefonos();
+                for (Telefono t : telefonos){
+                    if (t.getNumero().equals(telefono)) factura.setTelefono(t);
+                }
+            }
+            facturaService.createFactura(factura);
+            UI.getCurrent().getPage().reload();
+        });
+
+        horizontalLayout.add(txtPeriodo, select, txtMinutos, txtImporte, addButton);
 
         layout.add(titulo, horizontalLayout, facturaGrid);
 
         return layout;
     }
 
-    private VerticalLayout createServiciosSection() {
-        VerticalLayout layout = new VerticalLayout();
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.END);
-        Set<Telefono> telefonos = usuario.getTelefonos();
 
-        H2 titulo = new H2("Servicios");
-
-        TextField txtImporte = new TextField("Importe");
-
-        DatePicker txtPeriodo = new DatePicker("Periodo");
-
-        TextField txtMinutos = new TextField("Minutos");
-
-        ComboBox<String> select = new ComboBox<>("Telefono");
-        select.setAllowCustomValue(true);
-        for (Telefono telefono : telefonos){ select.setItems(telefono.getNumero()); }
-        Button addButton = new Button("Add Factura");
-
-        horizontalLayout.add(txtImporte,txtMinutos,txtPeriodo,select, addButton);
-
-        layout.add(titulo, horizontalLayout);
-
-        return layout;
-    }
-
-    private VerticalLayout createTelefonosSection(Grid<Telefono> telefonoGrid) {
+    private VerticalLayout createTelefonosSection(Grid<Telefono> telefonoGrid, Usuario usuario) {
         VerticalLayout layout = new VerticalLayout();
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setAlignItems(FlexComponent.Alignment.END);
@@ -150,14 +228,35 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
 
         H2 titulo = new H2("Telefonos");
 
-        TextField txtImporte = new TextField("Numero");
+        TextField txtNumero = new TextField("Numero");
 
         ComboBox<String> select = new ComboBox<>("Tarifa");
         select.setAllowCustomValue(true);
-        for (Tarifa tarifa : tarifas){ select.setItems(tarifa.getNombre()); }
-        Button addButton = new Button("Add Telefono");
+        List<String> tarifaNames = tarifas.stream()
+                .map(Tarifa::getNombre)
+                .collect(Collectors.toList());
+        select.setItems(tarifaNames);
 
-        horizontalLayout.add(txtImporte,select, addButton);
+        Button addButton = new Button("Add Telefono");
+        addButton.addClickListener(clickEvent -> {
+
+            Telefono telefono = new Telefono();
+            String numero = txtNumero.getValue();
+            String txtTarifa = select.getValue();
+
+            if (!numero.isEmpty()) telefono.setNumero(numero);
+            if (!txtTarifa.isEmpty()) {
+                List<Tarifa> aux = tarifaService.getTarifaAll();
+                for (Tarifa t : aux){
+                    if (t.getNombre().equals(txtTarifa)) telefono.setTarifa(t);
+                }
+            }
+            telefono.setUsuario(usuario);
+            telefonoService.createTelefono(telefono);
+            UI.getCurrent().getPage().reload();
+        });
+
+        horizontalLayout.add(txtNumero,select, addButton);
 
         layout.add(titulo, horizontalLayout, telefonoGrid);
 
@@ -174,15 +273,19 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
                 TabSheet tabView = new TabSheet();
                 Grid<Factura> facturaGrid = facturaGrid(this.usuario);
                 Grid<Telefono> telefonoGrid = telefonoGrid(this.usuario);
+                Button button = new Button(VaadinIcon.EDIT.create());
 
-                VerticalLayout datosPersonalesSection = createDatosPersonalesSection(this.usuario);
+                VerticalLayout showDatosPersonalesSection = showDatosPersonalesSection(this.usuario, userID);
+                showDatosPersonalesSection.setVisible(true);
+                VerticalLayout editableDatosPersonalesSection = editableDatosPersonalesSection(button, this.usuario);
+                editableDatosPersonalesSection.setVisible(false);
+
+                VerticalLayout datosPersonalesSection = datosPersonalesSection(button, this.usuario, showDatosPersonalesSection, editableDatosPersonalesSection, userID);
                 VerticalLayout facturaSection = createFacturaSection(facturaGrid, this.usuario);
-                VerticalLayout servicioSection = createServiciosSection();
-                VerticalLayout telefonosSection = createTelefonosSection(telefonoGrid);
+                VerticalLayout telefonosSection = createTelefonosSection(telefonoGrid, this.usuario);
 
                 tabView.add("Datos Personales", datosPersonalesSection);
                 tabView.add("Facturas", facturaSection);
-                tabView.add("Servicios", servicioSection);
                 tabView.add("Telefonos", telefonosSection);
                 getContent().add(nombrePerfil, tabView);
             } catch (NumberFormatException e) {
@@ -203,15 +306,23 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
             System.out.println("No user");
         }
 
+        telefonoGrid.addColumn(Telefono::getNumero).setHeader("Numero");
         telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
-            Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editTelefono(telefono));
+            // Assuming getTarifa() returns a Tarifa object and you want to display its name
+            String tarifaName = telefono.getTarifa() != null ? telefono.getTarifa().getNombre() : "N/A";
+            return new Text(tarifaName);
+        })).setHeader("Tarifa");
+        telefonoGrid.addColumn(Telefono::getRoaming).setHeader("Roaming");
+        telefonoGrid.addColumn(Telefono::getCompartirDatos).setHeader("Datos");
+        telefonoGrid.addColumn(new ComponentRenderer<>(telefono -> {
+//            Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editTelefono(telefono));
             Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> {
                 removeTelefono(telefono);
             });
             removeButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
 
-            HorizontalLayout actionsLayout = new HorizontalLayout(editButton, removeButton);
-            actionsLayout.setSpacing(true); // Adjust as needed for spacing between buttons
+            HorizontalLayout actionsLayout = new HorizontalLayout(removeButton);
+            actionsLayout.setSpacing(true);
             return actionsLayout;
         })).setHeader("Acciones");
 
@@ -225,10 +336,12 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
     }
 
     private void removeTelefono(Telefono telefono) {
+
     }
 
-    private void editTelefono(Telefono telefono) {
-    }
+//    private void editTelefono(Telefono telefono) {
+//
+//    }
 
     private Grid<Factura> facturaGrid(Usuario usuario) {
         Grid<Factura> facturaGrid = new Grid<>(Factura.class, false);
@@ -247,6 +360,10 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
             facturas = facturaService.getAllFacturasByTelefonoId(Long.valueOf(telefono.getId()));
         }
 
+        facturaGrid.addColumn(Factura::getPeriodo).setHeader("Periodo");
+        facturaGrid.addColumn(Factura::getTelefono).setHeader("Telefono");
+        facturaGrid.addColumn(Factura::getMinutos).setHeader("Minutos");
+        facturaGrid.addColumn(Factura::getImporte).setHeader("Importe");
         facturaGrid.addColumn(new ComponentRenderer<>(factura -> {
             Button editButton = new Button(VaadinIcon.EDIT.create(), clickEvent -> editFactura(factura));
             Button removeButton = new Button(VaadinIcon.TRASH.create(), clickEvent -> {
@@ -269,10 +386,8 @@ public class ModificarClienteView extends Composite<VerticalLayout> implements H
         return facturaGrid;
     }
 
-    private void editFactura(Factura factura) {
-    }
+    private void editFactura(Factura factura) { }
 
-    private void removeFactura(Factura factura) {
-    }
+    private void removeFactura(Factura factura) { }
 
 }

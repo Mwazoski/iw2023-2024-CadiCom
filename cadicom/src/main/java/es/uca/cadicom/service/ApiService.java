@@ -75,7 +75,7 @@ public class ApiService {
     public void generateUserfromLineaCliente(JSONObject jsonObject) {
         String name = jsonObject.get("name").toString();
         String surname = jsonObject.get("surname").toString();
-        String email = name.toLowerCase() + "." + surname.charAt(0) + "@gmail.com";
+        String email = name.toLowerCase() + "." + surname.toLowerCase() + "@gmail.com";
         String number = jsonObject.get("phoneNumber").toString();
 
         Usuario usuario = new Usuario(name, surname, email, "1234");
@@ -87,7 +87,7 @@ public class ApiService {
 
         String name = jsonObject.get("name").toString();
         String surname = jsonObject.get("surname").toString();
-        String email = name.toLowerCase() + "." + surname.charAt(0) + "@gmail.com";
+        String email = name.toLowerCase() + "." + surname.toLowerCase() + "@gmail.com";
         String number = jsonObject.get("phoneNumber").toString();
 
         Usuario usuario = usuarioService.getUser(email);
