@@ -1,5 +1,6 @@
 package es.uca.cadicom.views.frontoffice;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dependency.Uses;
@@ -44,6 +45,9 @@ public class DesgloseView extends Composite<VerticalLayout> {
         this.accessChecker = accessChecker;
         this.apiService = apiService;
 
+        VerticalLayout vlData = new VerticalLayout();
+        VerticalLayout vlLlamada = new VerticalLayout();
+
         Optional<Usuario> maybeUser = authenticatedUser.get();
 
         if (maybeUser.isPresent()) { usuario = maybeUser.get();}
@@ -67,20 +71,21 @@ public class DesgloseView extends Composite<VerticalLayout> {
         dpInicio.addValueChangeListener(e -> dpFinal.setMin(e.getValue()));
         dpFinal.addValueChangeListener(e -> {
             dpInicio.setMax(e.getValue());
-            setTabSheet(tabSheet);
+            setTabSheet(tabSheet, vlLlamada, vlData);
         });
 
         HorizontalLayout hlFechas = new HorizontalLayout();
 
         hlFechas.add(dpInicio, dpFinal);
+
+        tabSheet.add("Datos", vlData);
+        tabSheet.add("Llamadas", vlLlamada);
         getContent().add(hlFechas);
         getContent().add(tabSheet);
 
     }
 
-    private void setTabSheet(TabSheet tabSheet) {
-        VerticalLayout vlLlamada = new VerticalLayout();
-
+    private void setTabSheet(TabSheet tabSheet, VerticalLayout vlLlamada, VerticalLayout vlData ) {
         Grid<RegistroLlamadas> gLlamada = new Grid<>(RegistroLlamadas.class);
         gLlamada.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER,
                 GridVariant.LUMO_NO_ROW_BORDERS);
@@ -89,20 +94,7 @@ public class DesgloseView extends Composite<VerticalLayout> {
         vlLlamada.add(gLlamada);
         List<RegistroLlamadas> Llamadas = new ArrayList<>();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        getUserTelefonosIds().forEach(id ->{
-            try {
-                Llamadas.addAll(apiService.getRegistroLlamadas(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
-                gLlamada.setItems(Llamadas);
-            } catch (URISyntaxException | IOException | InterruptedException | ParseException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        VerticalLayout vlData = new VerticalLayout();
-
-        tabSheet.add("Llamadas", vlLlamada);
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         Grid<RegistroDatos> gData = new Grid<>(RegistroDatos.class);
         gData.addThemeVariants(GridVariant.LUMO_COMPACT, GridVariant.LUMO_NO_BORDER,
@@ -115,15 +107,21 @@ public class DesgloseView extends Composite<VerticalLayout> {
         List<RegistroDatos> data = new ArrayList<>();
         getUserTelefonosIds().forEach(id ->{
             try {
-                data.addAll(apiService.getRegistroDatos(id, dpInicio.getValue().format(formatter), dpFinal.getValue().format(formatter)));
+                data.addAll(apiService.getRegistroDatos(id, "1900-01-01", "2100-12-12"));
                 gData.setItems(data);
             } catch (URISyntaxException | IOException | InterruptedException | ParseException ex) {
                 throw new RuntimeException(ex);
             }
         });
 
-        tabSheet.add("Datos", vlData);
-        getContent().add(tabSheet);
+        getUserTelefonosIds().forEach(id ->{
+            try {
+                Llamadas.addAll(apiService.getRegistroLlamadas(id, "1900-01-01", "2100-12-12"));
+                gLlamada.setItems(Llamadas);
+            } catch (URISyntaxException | IOException | InterruptedException | ParseException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private List<String> getUserTelefonosIds(){

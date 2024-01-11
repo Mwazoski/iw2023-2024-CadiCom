@@ -222,43 +222,10 @@ public class UserView extends Composite<VerticalLayout> {
 
     private VerticalLayout createTelefonosSection(Grid<Telefono> telefonoGrid) {
         VerticalLayout layout = new VerticalLayout();
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setAlignItems(FlexComponent.Alignment.END);
-        List<Tarifa> tarifas = tarifaService.getTarifaAll();
 
         H2 titulo = new H2("Telefonos");
 
-        TextField txtNumero = new TextField("Numero");
-
-        ComboBox<String> select = new ComboBox<>("Tarifa");
-        select.setAllowCustomValue(true);
-        List<String> tarifaNames = tarifas.stream()
-                .map(Tarifa::getNombre)
-                .collect(Collectors.toList());
-        select.setItems(tarifaNames);
-
-        Button addButton = new Button("Add Telefono");
-        addButton.addClickListener(clickEvent -> {
-
-            Telefono telefono = new Telefono();
-            String numero = txtNumero.getValue();
-            String txtTarifa = select.getValue();
-
-            if (!numero.isEmpty()) telefono.setNumero(numero);
-            if (!txtTarifa.isEmpty()) {
-                List<Tarifa> aux = tarifaService.getTarifaAll();
-                for (Tarifa t : aux) {
-                    if (t.getNombre().equals(txtTarifa)) telefono.setTarifa(t);
-                }
-            }
-            telefono.setUsuario(usuario);
-            telefonoService.createTelefono(telefono);
-            UI.getCurrent().getPage().reload();
-        });
-
-        horizontalLayout.add(txtNumero, select, addButton);
-
-        layout.add(titulo, horizontalLayout, telefonoGrid);
+        layout.add(titulo, telefonoGrid);
 
         return layout;
     }

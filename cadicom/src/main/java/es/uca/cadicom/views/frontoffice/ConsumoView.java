@@ -28,6 +28,7 @@ import es.uca.cadicom.security.AuthenticatedUser;
 import es.uca.cadicom.service.ApiService;
 import es.uca.cadicom.service.FacturaService;
 import es.uca.cadicom.service.UsuarioService;
+import jakarta.annotation.security.PermitAll;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -40,7 +41,7 @@ import java.util.Set;
 
 @PageTitle("Consumo")
 @Route(value = "consumo", layout = FrontLayout.class)
-@AnonymousAllowed
+@PermitAll
 @Uses(Icon.class)
 public class ConsumoView extends Composite<VerticalLayout> {
 
@@ -74,7 +75,7 @@ public class ConsumoView extends Composite<VerticalLayout> {
 
         VerticalLayout vlGeneral = new VerticalLayout();
         vlGeneral.add(cbTelefono);
-
+        vlGeneral.setAlignItems(Alignment.START);
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
         vlGeneral.setWidthFull();
@@ -94,19 +95,18 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlData.setWidthFull();
         vlGeneral.setFlexGrow(1.0, hlData);
         hlData.addClassName(Gap.MEDIUM);
-        hlData.setWidth("100%");
         hlData.setHeight("min-content");
         hlData.setAlignItems(Alignment.CENTER);
         hlData.setJustifyContentMode(JustifyContentMode.START);
         //barData.setValue(0.5); //value barra barData.setValue();
 
 
-        NativeLabel nlblData = new NativeLabel("100 MB");// input datos totales
+        NativeLabel nlblData = new NativeLabel();// input datos totales
         nlblData.setId("pblblData");
         h2Data.setWidth("max-content");
         barData.getElement().setAttribute("aria-labelledby", "pblblData");
 
-        Span progressBarLabelValueData = new Span("50%"); // input texto derecha
+        Span progressBarLabelValueData = new Span(); // input texto derecha
         HorizontalLayout progressBarLabel = new HorizontalLayout(nlblData, progressBarLabelValueData);
         progressBarLabel.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
@@ -121,19 +121,18 @@ public class ConsumoView extends Composite<VerticalLayout> {
         hlLlamada.setWidthFull();
         vlGeneral.setFlexGrow(1.0, hlLlamada);
         hlLlamada.addClassName(Gap.MEDIUM);
-        hlLlamada.setWidth("100%");
         hlLlamada.setHeight("min-content");
         hlLlamada.setAlignItems(Alignment.CENTER);
         hlLlamada.setJustifyContentMode(JustifyContentMode.START);
         h2Llamada.setWidth("max-content");
         //barLlamada.setValue(0.5); //value barra barLlamada.setValue();
 
-        NativeLabel nlblLlamada = new NativeLabel("100 Sec");// input datos totales
-        nlblLlamada.setId("pblblData");
+        NativeLabel nlblLlamada = new NativeLabel();// input datos totales
+        nlblLlamada.setId("pblblLlamada");
         h2Data.setWidth("max-content");
-        barData.getElement().setAttribute("aria-labelledby", "pblblData");
+        barData.getElement().setAttribute("aria-labelledby", "pblblLlamada");
 
-        Span progressBarLabelValueLlamada = new Span("0%"); // input texto derecha
+        Span progressBarLabelValueLlamada = new Span(); // input texto derecha
         HorizontalLayout progressBarLabelLlamada = new HorizontalLayout(nlblLlamada, progressBarLabelValueLlamada);
         progressBarLabelLlamada.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
@@ -146,12 +145,12 @@ public class ConsumoView extends Composite<VerticalLayout> {
         vlGeneral.add(hlData);
         hlData.add(iconData);
         hlData.add(h2Data);
-        vlGeneral.add(progressBarLabel, barData);
+        vlGeneral.add(progressBarLabelValueData, barData);
         vlGeneral.add(separador2);
         vlGeneral.add(hlLlamada);
         hlLlamada.add(iconLlamada);
         hlLlamada.add(h2Llamada);
-        vlGeneral.add(progressBarLabel, barLlamada);
+        vlGeneral.add(progressBarLabelLlamada, barLlamada);
 
     }
 

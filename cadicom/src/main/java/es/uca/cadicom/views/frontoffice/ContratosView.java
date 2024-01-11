@@ -59,8 +59,8 @@ public class ContratosView extends Composite<VerticalLayout> {
         VerticalLayout vlGeneral = new VerticalLayout();
         vlGeneral.add(cbTelefono);
         cbTelefono.addValueChangeListener(event -> {
+
             Tarifa tarifa = cbTelefono.getValue().getTarifa();
-            H1 hTarifa = new H1("Tarifa");
 
             H5 hNombre = new H5("Nombre");
             Paragraph pNombre = new Paragraph(tarifa.getNombre());
@@ -77,9 +77,10 @@ public class ContratosView extends Composite<VerticalLayout> {
             HorizontalLayout hlMinutos = new HorizontalLayout(hMinutos, pMinutos);
             hlMinutos.setAlignItems(FlexComponent.Alignment.CENTER);
 
-
-            getContent().add(cbTelefono,hTarifa,hlNombre,hlDatos,hlMinutos);
+            getContent().add(hlNombre,hlDatos,hlMinutos);
 
         });
+        H1 hTarifa = new H1("Tarifa");
+        getContent().add(cbTelefono, hTarifa);
     }
 }
